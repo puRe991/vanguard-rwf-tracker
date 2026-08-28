@@ -184,6 +184,29 @@ könnte ein späterer Import stattdessen `WarcraftLogsClient` wiederverwenden, u
 Guild-Reports vergangener Tiers systematisch statt Boss-für-Boss aus einer
 Zweitquelle abzufragen.
 
+## Gilden-Profile: Recap & Kill-Historie
+
+`Data/GuildProfileSeeder.cs` ergänzt einzelne, wiederkehrende Gilden um einen
+Recap-Text (Entstehung, Höhepunkte, Auflösung/Nachfolge), einen Lifecycle-Status
+(`Active`/`Disbanded`/`Retired`/`Unknown`) und Social-Links (Twitch/YouTube/
+Twitter/Website) — recherchiert aus öffentlich verifizierbaren Quellen (u. a.
+Wikipedia, Blizzard Watch, mein-mmo.de, teamliquid.com, method.gg,
+echoesports.gg), abgerufen 2026: Nihilum, Ensidia, Paragon, Method, Echo,
+Blood Legion sowie die Limit → Complexity Limit → Liquid-Linie. Alle anderen
+importierten Gilden bleiben bewusst ohne Bio (`Status = Unknown`) statt
+Geschichte zu erfinden — das Frontend zeigt für sie einfach keinen
+Recap-Block.
+
+`GET /api/guilds/{id}/profile` liefert Bio/Status/Links plus die komplette
+Kill-Historie der Gilde über alle Seasons hinweg, gruppiert nach Addon im
+Frontend (`GuildProfile.tsx`). Jeder Kill trägt seinen `SourceUrl` als
+"Beleg/Video"-Link — bei live getrackten Kills der Warcraft-Logs-Fight-Link,
+bei kuratierter Historie der jeweilige Method-Quellenlink. Eine echte
+Video-Bibliothek pro Kill oder eingebettete Twitch-Streams gibt es bewusst
+nicht: Ohne YouTube-/Twitch-API-Anbindung wäre das nur weitere unbelegte
+Daten — die Social-Links verweisen stattdessen auf die offiziellen Kanäle,
+auf denen sich die echten VODs finden lassen.
+
 ## Design-System
 
 Siehe `frontend/src/index.css` (`@theme`-Block) für die Farb- und

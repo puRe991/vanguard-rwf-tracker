@@ -87,6 +87,7 @@ if (app.Environment.IsDevelopment())
     await DragonflightHistorySeeder.SeedAsync(db);
     await TheWarWithinHistorySeeder.SeedAsync(db);
     await MidnightHistorySeeder.SeedAsync(db);
+    await GuildProfileSeeder.SeedAsync(db);
 }
 
 app.UseHttpsRedirection();

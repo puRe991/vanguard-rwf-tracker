@@ -45,6 +45,26 @@ public record PullSeriesPointDto(int PullNumber, DateTimeOffset Timestamp);
 
 public record BossPullSeriesDto(GuildDto Guild, List<PullSeriesPointDto> Points, bool Killed);
 
+public record GuildLinksDto(string? Twitch, string? YouTube, string? Twitter, string? Website);
+
+public record GuildHistoryKillDto(
+    string Expansion,
+    string RaidName,
+    string BossName,
+    DateTimeOffset KillDate,
+    int PullCount,
+    string? SourceUrl // Beleg-/Video-Link des Kills
+);
+
+public record GuildProfileDto(
+    GuildDto Guild,
+    string Status, // "active" | "disbanded" | "retired" | "unknown"
+    int? DisbandedYear,
+    string? Bio,
+    GuildLinksDto Links,
+    List<GuildHistoryKillDto> History // chronologisch absteigend, neuester Kill zuerst
+);
+
 public record SubmitKillRequest(
     Guid BossId,
     Guid GuildId,

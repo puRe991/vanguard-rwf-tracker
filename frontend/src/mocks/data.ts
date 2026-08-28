@@ -1,5 +1,6 @@
 import type {
   BossPullSeries,
+  GuildProfile,
   GuildRaceEntry,
   HistoryBoss,
   HistoryTier,
@@ -971,5 +972,139 @@ export const mockPullSeries: BossPullSeries[] = [
       pullNumber: i + 1,
       timestamp: new Date(Date.now() - (341 - i) * 900_000).toISOString(),
     })),
+  },
+];
+
+// Recap-Texte wie im Backend-GuildProfileSeeder recherchiert (Quellen u. a. Wikipedia,
+// Blizzard Watch, teamliquid.com, method.gg, echoesports.gg) — hier für den Mock-Modus
+// dupliziert, damit die UI ohne Backend die gleiche Erzählung zeigt.
+export const mockGuildProfiles: GuildProfile[] = [
+  {
+    guild: { id: 'g1', name: 'Liquid', region: 'US', foundedYear: 2015 },
+    status: 'active',
+    bio:
+      'Liquid Guild ist die direkte Fortsetzung von Complexity Limit (zuvor Limit, ' +
+      'gegründet 2015): Im Januar 2022 übernahm die Esports-Organisation Team Liquid ' +
+      'die Gilde und gliederte sie als eigene MMO-Sparte ein. Seit Sepulcher of the ' +
+      'First Ones zählt Liquid durchgehend zur Weltspitze und hat unter anderem ' +
+      "Nerub'ar Palace, Liberation of Undermine, Manaforge Omega und die ersten beiden " +
+      'Midnight-Raids als Erste bezwungen.',
+    links: {
+      twitch: 'https://www.twitch.tv/teamliquid',
+      youTube: 'https://www.youtube.com/@TeamLiquidMMO',
+      twitter: 'https://x.com/LiquidGuild',
+      website: 'https://teamliquid.com/games/wow',
+    },
+    history: [
+      {
+        expansion: 'Midnight',
+        raidName: "March on Quel'Danas",
+        bossName: "Midnight Falls (L'ura)",
+        killDate: '2026-04-06',
+        pullCount: 0,
+        sourceUrl: 'https://www.method.gg/raid-history/midnight',
+      },
+      {
+        expansion: 'The War Within',
+        raidName: 'Manaforge Omega',
+        bossName: 'Dimensius, the All-Devouring',
+        killDate: '2025-08-24',
+        pullCount: 0,
+        sourceUrl: 'https://www.method.gg/raid-history/the-war-within',
+      },
+      {
+        expansion: 'The War Within',
+        raidName: "Nerub'ar Palace",
+        bossName: 'Queen Ansurek',
+        killDate: '2024-09-29',
+        pullCount: 0,
+        sourceUrl: 'https://www.method.gg/raid-history/the-war-within',
+      },
+      {
+        expansion: 'Dragonflight',
+        raidName: 'Aberrus, the Shadowed Crucible',
+        bossName: 'Scalecommander Sarkareth',
+        killDate: '2023-05-15',
+        pullCount: 0,
+        sourceUrl: 'https://www.method.gg/raid-history/dragonflight',
+      },
+      {
+        expansion: 'Shadowlands',
+        raidName: 'Sepulcher of the First Ones',
+        bossName: 'The Jailer, Zovaal',
+        killDate: '2022-03-26',
+        pullCount: 0,
+        sourceUrl: 'https://www.method.gg/raid-history/shadowlands',
+      },
+    ],
+  },
+  {
+    guild: { id: 'g2', name: 'Echo', region: 'EU', foundedYear: 2020 },
+    status: 'active',
+    bio:
+      'Echo entstand im Juli 2020 aus dem größten Teil des ehemaligen Method-Raid-Kaders, ' +
+      'kurz nachdem die Method-Organisation durch einen Missbrauchsskandal ' +
+      'auseinandergebrochen war. Seit Shadowlands zählt Echo durchgehend zur absoluten ' +
+      'Weltspitze und hat unter anderem Sepulcher of the First Ones, Vault of the ' +
+      "Incarnates und Amirdrassil, the Dream's Hope als Erste bezwungen.",
+    links: {
+      twitch: 'https://www.twitch.tv/echo_esports',
+      twitter: 'https://twitter.com/EchoGuild',
+      website: 'https://www.echoesports.gg',
+    },
+    history: [
+      {
+        expansion: 'The War Within',
+        raidName: 'Liberation of Undermine',
+        bossName: 'Sprocketmonger Lockenstock',
+        killDate: '2025-03-11',
+        pullCount: 0,
+        sourceUrl: 'https://www.method.gg/raid-history/the-war-within',
+      },
+      {
+        expansion: 'Dragonflight',
+        raidName: "Amirdrassil, the Dream's Hope",
+        bossName: 'Fyrakk the Blazing',
+        killDate: '2023-11-26',
+        pullCount: 0,
+        sourceUrl: 'https://www.method.gg/raid-history/dragonflight',
+      },
+      {
+        expansion: 'Dragonflight',
+        raidName: 'Vault of the Incarnates',
+        bossName: 'Raszageth the Storm-Eater',
+        killDate: '2022-12-23',
+        pullCount: 0,
+        sourceUrl: 'https://www.method.gg/raid-history/dragonflight',
+      },
+    ],
+  },
+  {
+    guild: { id: 'g3', name: 'Complexity Limit', region: 'US' },
+    status: 'disbanded',
+    disbandedYear: 2022,
+    bio:
+      'Aus der im Oktober 2019 geschlossenen Partnerschaft von Limit mit der Organisation ' +
+      'Complexity hervorgegangen, erreichte Complexity Limit im Februar 2020 mit ' +
+      "Ny'alotha, the Waking City erstmals den Rang der weltbesten Gilde. Im Januar 2022 " +
+      'wurde die Gilde von Team Liquid übernommen und trat fortan als Liquid Guild an.',
+    links: {},
+    history: [
+      {
+        expansion: 'Battle for Azeroth',
+        raidName: "Ny'alotha, the Waking City",
+        bossName: "N'Zoth the Corruptor",
+        killDate: '2020-02-06',
+        pullCount: 0,
+        sourceUrl: 'https://www.method.gg/raid-history/battle-for-azeroth',
+      },
+    ],
+  },
+  {
+    // Keine recherchierte Bio vorhanden — zeigt den Fallback-Zustand der UI.
+    guild: { id: 'g4', name: 'BDGG', region: 'EU' },
+    status: 'unknown',
+    links: {},
+    history: [],
   },
 ];

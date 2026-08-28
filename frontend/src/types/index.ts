@@ -98,3 +98,30 @@ export interface BossPullSeries {
   points: PullSeriesPoint[];
   killed: boolean;
 }
+
+export type GuildLifecycleStatus = 'active' | 'disbanded' | 'retired' | 'unknown';
+
+export interface GuildLinks {
+  twitch?: string;
+  youTube?: string;
+  twitter?: string;
+  website?: string;
+}
+
+export interface GuildHistoryKill {
+  expansion: string;
+  raidName: string;
+  bossName: string;
+  killDate: string;
+  pullCount: number;
+  sourceUrl?: string;
+}
+
+export interface GuildProfile {
+  guild: Guild;
+  status: GuildLifecycleStatus;
+  disbandedYear?: number;
+  bio?: string;
+  links: GuildLinks;
+  history: GuildHistoryKill[];
+}

@@ -1,5 +1,11 @@
-import type { BossPullSeries, GuildRaceEntry, HistoryTier, LiveTickerEvent } from '../types';
-import { mockCurrentRace, mockHistory, mockPullSeries, mockTicker } from '../mocks/data';
+import type {
+  BossPullSeries,
+  GuildProfile,
+  GuildRaceEntry,
+  HistoryTier,
+  LiveTickerEvent,
+} from '../types';
+import { mockCurrentRace, mockGuildProfiles, mockHistory, mockPullSeries, mockTicker } from '../mocks/data';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api';
 
@@ -50,4 +56,9 @@ export async function fetchBossPulls(bossId: string): Promise<BossPullSeries[]> 
 export async function fetchGuild(id: string): Promise<GuildRaceEntry | undefined> {
   if (USE_MOCKS) return mockCurrentRace.find((g) => g.guild.id === id);
   return getJson<GuildRaceEntry>(`/guilds/${id}`);
+}
+
+export async function fetchGuildProfile(id: string): Promise<GuildProfile | undefined> {
+  if (USE_MOCKS) return mockGuildProfiles.find((p) => p.guild.id === id);
+  return getJson<GuildProfile>(`/guilds/${id}/profile`);
 }
