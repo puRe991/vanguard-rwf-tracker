@@ -4,8 +4,17 @@ import type {
   GuildRaceEntry,
   HistoryTier,
   LiveTickerEvent,
+  PvpBracket,
+  PvpLadderEntry,
 } from '../types';
-import { mockCurrentRace, mockGuildProfiles, mockHistory, mockPullSeries, mockTicker } from '../mocks/data';
+import {
+  mockCurrentRace,
+  mockGuildProfiles,
+  mockHistory,
+  mockPullSeries,
+  mockPvpLadder,
+  mockTicker,
+} from '../mocks/data';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api';
 
@@ -61,4 +70,11 @@ export async function fetchGuild(id: string): Promise<GuildRaceEntry | undefined
 export async function fetchGuildProfile(id: string): Promise<GuildProfile | undefined> {
   if (USE_MOCKS) return mockGuildProfiles.find((p) => p.guild.id === id);
   return getJson<GuildProfile>(`/guilds/${id}/profile`);
+}
+
+/** Beta: PvP-Rating-Leiter. Läuft aktuell auf kuratierten Platzhalterdaten
+ * (Backend: PvpDemoSeeder), da es keine Blizzard-Battle.net-API-Anbindung gibt. */
+export async function fetchPvpLadder(bracket: PvpBracket): Promise<PvpLadderEntry[]> {
+  if (USE_MOCKS) return mockPvpLadder[bracket] ?? [];
+  return getJson<PvpLadderEntry[]>(`/pvp/ladder?bracket=${bracket}`);
 }

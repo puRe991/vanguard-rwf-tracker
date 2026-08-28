@@ -1,11 +1,13 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { LiveStatusBadge } from './LiveStatusBadge';
 import { KillToastStack } from './KillToastStack';
+import { BetaBadge } from './BetaBadge';
 import { APP_VERSION } from '../lib/version';
 
 const links = [
   { to: '/', label: 'Live-Race', end: true },
   { to: '/history', label: 'Historie' },
+  { to: '/pvp', label: 'PvP', beta: true },
   { to: '/submit', label: 'Kill einreichen' },
 ];
 
@@ -20,7 +22,7 @@ export function Layout() {
             </div>
             <LiveStatusBadge />
           </div>
-          <nav className="flex gap-6">
+          <nav className="flex items-center gap-6">
             {links.map((link) => (
               <NavLink
                 key={link.to}
@@ -28,12 +30,13 @@ export function Layout() {
                 end={link.end}
                 className={({ isActive }) =>
                   [
-                    'eyebrow text-xs transition-colors',
+                    'eyebrow flex items-center gap-1.5 text-xs transition-colors',
                     isActive ? 'text-turquoise' : 'text-text-muted hover:text-text',
                   ].join(' ')
                 }
               >
                 {link.label}
+                {link.beta && <BetaBadge />}
               </NavLink>
             ))}
           </nav>

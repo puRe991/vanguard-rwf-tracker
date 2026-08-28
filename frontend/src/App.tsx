@@ -8,6 +8,7 @@ import { History } from './pages/History';
 import { GuildProfile } from './pages/GuildProfile';
 import { BossDetail } from './pages/BossDetail';
 import { SubmitKill } from './pages/SubmitKill';
+import { PvpLadder } from './pages/PvpLadder';
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ function App() {
             <Route path="guilds/:id" element={<GuildProfile />} />
             <Route path="bosses/:id" element={<BossDetail />} />
             <Route path="submit" element={<SubmitKill />} />
+            <Route path="pvp" element={<PvpLadder />} />
           </Route>
         </Routes>
       </BrowserRouter>

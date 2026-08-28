@@ -97,6 +97,7 @@ if (app.Environment.IsDevelopment())
     await TheWarWithinHistorySeeder.SeedAsync(db);
     await MidnightHistorySeeder.SeedAsync(db);
     await GuildProfileSeeder.SeedAsync(db);
+    await PvpDemoSeeder.SeedAsync(db);
 }
 
 app.UseHttpsRedirection();

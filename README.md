@@ -228,6 +228,29 @@ nicht: Ohne YouTube-/Twitch-API-Anbindung wäre das nur weitere unbelegte
 Daten — die Social-Links verweisen stattdessen auf die offiziellen Kanäle,
 auf denen sich die echten VODs finden lassen.
 
+## PvP-Rating-Leiter (Beta)
+
+Erster Schritt Richtung PvP-Esports (analog zur RWF-Idee: "Race to Rank 1 /
+Gladiator" statt "Race to World First"). Bewusst als Beta markiert — überall
+sichtbar per `<BetaBadge>` (Nav-Link, Seitentitel) — weil es noch **keine**
+Blizzard-Battle.net-API-Anbindung gibt. `Data/PvpDemoSeeder.cs` füllt
+`GET /api/pvp/ladder?bracket=<2v2|3v3|rbg|solo-shuffle>` mit rein fiktiven
+Team-/Spielernamen statt erfundene Ratings für echte Personen vorzutäuschen —
+gleiches Prinzip wie bei `DbSeeder`s fiktiver Live-Demo-Season.
+
+Tier-Einstufung (Combatant → Challenger → Rival → Duelist → Elite →
+Gladiator) läuft über feste Rating-Schwellen in `PvpController.TierFor` — eine
+grobe Näherung, keine belastbare Einstufung, da die echten Cutoffs erst am
+Season-Ende pro Bracket/Region von Blizzard festgelegt werden.
+`components/RatingRail.tsx` spiegelt bewusst die Boss-Rail-Optik (Knoten,
+Gold = erreicht, Ember-Glow = aktueller Tier) als visuelle Klammer zwischen
+PvE- und PvP-Bereich.
+
+Nächste Schritte für einen Vollausbau: eigenes `Player`-Entity (aktuell nur
+Strings je Team), echte Ladder-Daten über die Battle.net-API, sowie
+AWC-Turnier-Tracking (Bracket-Ansicht, Live-Match-Ticker) als eigener Ausbau
+— siehe Konzeptideen in der Projekt-Historie.
+
 ## Design-System
 
 Siehe `frontend/src/index.css` (`@theme`-Block) für die Farb- und

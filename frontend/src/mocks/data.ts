@@ -5,6 +5,9 @@ import type {
   HistoryBoss,
   HistoryTier,
   LiveTickerEvent,
+  PvpBracket,
+  PvpLadderEntry,
+  PvpTier,
 } from '../types';
 
 const bossNames = [
@@ -1108,3 +1111,72 @@ export const mockGuildProfiles: GuildProfile[] = [
     history: [],
   },
 ];
+
+// Beta: Rating-Leiter-Dashboard fürs PvP-Pendant zu "Race to World First". Es gibt
+// (noch) keine Blizzard-Battle.net-API-Anbindung — daher rein fiktive Team-/
+// Spielernamen statt erfundener Ratings für echte Personen (gespiegelt aus dem
+// Backend-PvpDemoSeeder, damit Mock- und Echtmodus gleich aussehen).
+function tierFor(rating: number): PvpTier {
+  if (rating >= 2400) return 'Gladiator';
+  if (rating >= 2100) return 'Elite';
+  if (rating >= 1800) return 'Duelist';
+  if (rating >= 1600) return 'Rival';
+  if (rating >= 1400) return 'Challenger';
+  return 'Combatant';
+}
+
+function ladderOf(
+  bracket: PvpBracket,
+  teams: { name: string; region: string; rating: number; players: string[] }[],
+): PvpLadderEntry[] {
+  return teams
+    .slice()
+    .sort((a, b) => b.rating - a.rating)
+    .map((t, i) => ({
+      rank: i + 1,
+      id: `${bracket}-${i}`,
+      name: t.name,
+      region: t.region,
+      bracket,
+      rating: t.rating,
+      tier: tierFor(t.rating),
+      players: t.players,
+      updatedAt: new Date().toISOString(),
+    }));
+}
+
+export const mockPvpLadder: Record<PvpBracket, PvpLadderEntry[]> = {
+  '3v3': ladderOf('3v3', [
+    { name: 'Ember Vanguard', region: 'EU', rating: 2687, players: ['Nightglass', 'Suncaller', 'Vraskor'] },
+    { name: 'Frostcoil Trio', region: 'EU', rating: 2541, players: ['Ashenwake', 'Coldmourne', 'Thundervex'] },
+    { name: 'Sable Wardens', region: 'US', rating: 2488, players: ['Grimhollow', 'Ravenshade', 'Duskwarden'] },
+    { name: 'Voidbound Three', region: 'US', rating: 2312, players: ['Nyxaria', 'Shadowmere', 'Emberfall'] },
+    { name: 'Ironclad Trinity', region: 'TW', rating: 2156, players: ['Steelrend', 'Warglory', 'Ironvow'] },
+    { name: 'Wraithcall', region: 'KR', rating: 2034, players: ['Hexbane', 'Soulrend', 'Netherquill'] },
+    { name: 'Stormforged', region: 'EU', rating: 1876, players: ['Galewind', 'Tempestra', 'Boltcaster'] },
+    { name: 'Dawnwatch', region: 'US', rating: 1622, players: ['Sunveil', 'Lightbringer', 'Aurorafen'] },
+  ]),
+  '2v2': ladderOf('2v2', [
+    { name: 'Twin Fangs', region: 'EU', rating: 2521, players: ['Venomstrike', 'Coldbite'] },
+    { name: 'Ashen Duo', region: 'US', rating: 2398, players: ['Cinderwake', 'Grimfall'] },
+    { name: 'Skyward Pair', region: 'EU', rating: 2201, players: ['Windrider', 'Stormsong'] },
+    { name: 'Nightfall Two', region: 'TW', rating: 2065, players: ['Duskbringer', 'Moonshade'] },
+    { name: 'Ironbound', region: 'KR', rating: 1889, players: ['Anvilheart', 'Forgewrath'] },
+    { name: 'Emberkin', region: 'US', rating: 1655, players: ['Blazewing', 'Pyrestep'] },
+  ]),
+  rbg: ladderOf('rbg', [
+    { name: 'Crimson Battalion', region: 'EU', rating: 2477, players: Array.from({ length: 10 }, (_, i) => `CrimsonWarden${i + 1}`) },
+    { name: 'Northwatch Legion', region: 'US', rating: 2298, players: Array.from({ length: 10 }, (_, i) => `NorthwatchWarden${i + 1}`) },
+    { name: 'Ashfall Regiment', region: 'EU', rating: 2109, players: Array.from({ length: 10 }, (_, i) => `AshfallWarden${i + 1}`) },
+    { name: 'Silverpine Guard', region: 'US', rating: 1934, players: Array.from({ length: 10 }, (_, i) => `SilverpineWarden${i + 1}`) },
+    { name: 'Stormcrest Company', region: 'TW', rating: 1748, players: Array.from({ length: 10 }, (_, i) => `StormcrestWarden${i + 1}`) },
+  ]),
+  'solo-shuffle': ladderOf('solo-shuffle', [
+    { name: 'Vex the Unseen', region: 'EU', rating: 2589, players: ['Vex the Unseen'] },
+    { name: 'Korrath Ashblade', region: 'US', rating: 2444, players: ['Korrath Ashblade'] },
+    { name: 'Mirelle Duskthorn', region: 'EU', rating: 2287, players: ['Mirelle Duskthorn'] },
+    { name: 'Baelor Stormrend', region: 'US', rating: 2103, players: ['Baelor Stormrend'] },
+    { name: 'Syvane Nightglow', region: 'KR', rating: 1912, players: ['Syvane Nightglow'] },
+    { name: 'Tharion Wolfsbane', region: 'TW', rating: 1701, players: ['Tharion Wolfsbane'] },
+  ]),
+};

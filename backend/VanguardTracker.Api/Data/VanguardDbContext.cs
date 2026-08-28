@@ -12,6 +12,7 @@ public class VanguardDbContext(DbContextOptions<VanguardDbContext> options) : Db
     public DbSet<Guild> Guilds => Set<Guild>();
     public DbSet<Kill> Kills => Set<Kill>();
     public DbSet<EncounterProgress> EncounterProgresses => Set<EncounterProgress>();
+    public DbSet<PvpTeam> PvpTeams => Set<PvpTeam>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -70,5 +71,8 @@ public class VanguardDbContext(DbContextOptions<VanguardDbContext> options) : Db
         modelBuilder.Entity<EncounterProgress>()
             .HasIndex(p => new { p.GuildId, p.BossId })
             .IsUnique();
+
+        modelBuilder.Entity<PvpTeam>()
+            .HasIndex(t => new { t.Bracket, t.Region });
     }
 }

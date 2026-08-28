@@ -125,3 +125,19 @@ export interface GuildProfile {
   links: GuildLinks;
   history: GuildHistoryKill[];
 }
+
+export type PvpBracket = '2v2' | '3v3' | 'rbg' | 'solo-shuffle';
+
+export type PvpTier = 'Combatant' | 'Challenger' | 'Rival' | 'Duelist' | 'Elite' | 'Gladiator';
+
+export interface PvpLadderEntry {
+  rank: number;
+  id: string;
+  name: string;
+  region: string;
+  bracket: PvpBracket;
+  rating: number;
+  tier: PvpTier;
+  players: string[];
+  updatedAt: string;
+}
