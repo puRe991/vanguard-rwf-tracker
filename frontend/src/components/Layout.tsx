@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { LiveStatusBadge } from './LiveStatusBadge';
 import { KillToastStack } from './KillToastStack';
+import { APP_VERSION } from '../lib/version';
 
 const links = [
   { to: '/', label: 'Live-Race', end: true },
@@ -10,7 +11,7 @@ const links = [
 
 export function Layout() {
   return (
-    <div className="min-h-screen bg-obsidian text-text">
+    <div className="flex min-h-screen flex-col bg-obsidian text-text">
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
@@ -38,9 +39,15 @@ export function Layout() {
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-6 py-8">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-8">
         <Outlet />
       </main>
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 text-[11px] text-text-muted">
+          <span>Vanguard — Race to World First Tracker</span>
+          <span className="font-mono-num">v{APP_VERSION}</span>
+        </div>
+      </footer>
       <KillToastStack />
     </div>
   );

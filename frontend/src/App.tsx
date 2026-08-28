@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Layout } from './components/Layout';
+import { SplashScreen } from './components/SplashScreen';
 import { Dashboard } from './pages/Dashboard';
 import { History } from './pages/History';
 import { GuildProfile } from './pages/GuildProfile';
@@ -10,8 +12,11 @@ import { SubmitKill } from './pages/SubmitKill';
 const queryClient = new QueryClient();
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
   return (
     <QueryClientProvider client={queryClient}>
+      {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>

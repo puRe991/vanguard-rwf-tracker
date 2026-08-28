@@ -234,6 +234,22 @@ Siehe `frontend/src/index.css` (`@theme`-Block) für die Farb- und
 Typografie-Tokens des "Vanguard"-Designs (Obsidian/Türkis/Gold/Ember,
 Cinzel/Barlow Condensed/Inter/JetBrains Mono).
 
+## Version & Splash Screen
+
+Aktuelle Version: **0.1.0** — einzige Quelle ist `frontend/package.json`
+(`src/lib/version.ts` importiert sie von dort) und `<Version>` in
+`VanguardTracker.Api.csproj`/`AppInfo.cs` fürs Backend; beim Hochzählen beide
+Stellen synchron halten. Sichtbar im Frontend-Footer auf jeder Seite und auf
+dem Splash Screen; im Backend über `GET /api/version` sowie im Swagger-Titel.
+
+`components/SplashScreen.tsx` zeigt beim App-Start kurz (~1,8s) das
+VANGUARD-Wortmark mit einlaufender Tagline und einem sechs-Punkte-Loader im
+Boss-Rail-Motiv (dieselben Knoten wie in `BossRail.tsx`, hier nacheinander in
+Gold aufleuchtend statt kill-Status) — bewusst als kleine visuelle
+Selbstreferenz auf das Signature-Element des Designs. In `App.tsx` per
+`showSplash`-State eingebunden, blendet über `opacity`+`pointer-events-none`
+aus und wird danach aus dem Baum entfernt.
+
 ## Phasenplan
 
 1. **MVP** (erledigt): EF-Core-Schema + manuelles Seeding, React-Dashboard

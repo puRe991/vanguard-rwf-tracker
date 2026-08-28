@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using VanguardTracker.Api;
 using VanguardTracker.Api.Data;
 using VanguardTracker.Api.Hubs;
 using VanguardTracker.Api.Services;
@@ -13,7 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Vanguard API",
+        Version = $"v{AppInfo.Version}",
+    });
+});
 builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<VanguardDbContext>(options =>
@@ -98,6 +106,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<RaceHub>("/hubs/race");
+app.MapGet("/api/version", () => Results.Ok(new { version = AppInfo.Version, name = "Vanguard API" }));
 
 if (app.Environment.IsDevelopment())
 {

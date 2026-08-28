@@ -55,3 +55,36 @@ body {
     transform: translateY(0);
   }
 }
+
+@keyframes splash-logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+    letter-spacing: 0.15em;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    letter-spacing: 0.02em;
+  }
+}
+
+@keyframes splash-eyebrow-in {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes splash-node {
+  0%,
+  100% {
+    background-color: var(--color-border);
+  }
+  50% {
+    background-color: var(--color-gold);
+  }
+}
