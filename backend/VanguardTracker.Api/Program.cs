@@ -79,6 +79,14 @@ if (app.Environment.IsDevelopment())
     await BurningCrusadeHistorySeeder.SeedAsync(db);
     await WrathHistorySeeder.SeedAsync(db);
     await CataclysmHistorySeeder.SeedAsync(db);
+    await MistsOfPandariaHistorySeeder.SeedAsync(db);
+    await WarlordsHistorySeeder.SeedAsync(db);
+    await LegionHistorySeeder.SeedAsync(db);
+    await BattleForAzerothHistorySeeder.SeedAsync(db);
+    await ShadowlandsHistorySeeder.SeedAsync(db);
+    await DragonflightHistorySeeder.SeedAsync(db);
+    await TheWarWithinHistorySeeder.SeedAsync(db);
+    await MidnightHistorySeeder.SeedAsync(db);
 }
 
 app.UseHttpsRedirection();

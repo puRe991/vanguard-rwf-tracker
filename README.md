@@ -141,10 +141,48 @@ trotzdem die vollständige, dokumentierte Boss-Liste jedes Raids an. Pull-Zahlen
 sind für diese Ären generell nicht überliefert und stehen daher auf `0`; die
 History-UI blendet `0 Pulls` aus statt sie als Fakt darzustellen.
 
-Ab Dragon Soul/Cataclysm endet die manuell kuratierte Historie — für spätere
-Addons (verlässliche Warcraft-Logs-Abdeckung) soll ein Import stattdessen
-`WarcraftLogsClient` wiederverwenden, um Guild-Reports vergangener Tiers
-systematisch statt Boss-für-Boss abzufragen.
+Ab Mists of Pandaria dokumentiert Method jeden Boss einzeln mit eigener
+Weltrekord-Gilde/-Datum statt nur das Tier-Gesamtergebnis. Dafür gibt es
+`HistorySeederHelpers.AddRaidWithPerBossKillsAsync` — jeder Boss bekommt seinen
+eigenen `Kill`-Datensatz (verschiedene Gilden können verschiedene Bosse zuerst
+legen), der letzte Eintrag pro Raid markiert weiterhin den Tier-Clear. Optionale
+Geheim-Bosse (Algalon in Ulduar, Ra-den in Throne of Thunder), die nach dem
+regulären Tier-Clear gelegt wurden, sind bewusst nicht als letzter Eintrag
+angelegt, damit sie nicht fälschlich als Tier-Ergebnis gezählt werden.
+
+Kuratiert bis einschließlich Midnight (aktuelles Addon, Stand des Method-Imports):
+`Data/MistsOfPandariaHistorySeeder.cs`, `WarlordsHistorySeeder.cs`,
+`LegionHistorySeeder.cs`, `BattleForAzerothHistorySeeder.cs`,
+`ShadowlandsHistorySeeder.cs`, `DragonflightHistorySeeder.cs`,
+`TheWarWithinHistorySeeder.cs`, `MidnightHistorySeeder.cs` — je Quelle
+`method.gg/raid-history/<addon-slug>`. Tier-Clears (finaler Boss/Gilde/Datum):
+
+| Addon | Letzter Raid | Finaler Boss | World-First-Gilde | Kill-Datum |
+|---|---|---|---|---|
+| Mists of Pandaria | Siege of Orgrimmar | Garrosh Hellscream | Method (EU) | 01.10.2013 |
+| Warlords of Draenor | Hellfire Citadel | Archimonde | Method (EU) | 16.07.2015 |
+| Legion | Antorus, the Burning Throne | Argus the Unmaker | Method (EU) | 13.12.2017 |
+| Battle for Azeroth | Ny'alotha, the Waking City | N'Zoth the Corruptor | Complexity Limit (US) | 06.02.2020 |
+| Shadowlands | Sepulcher of the First Ones | The Jailer, Zovaal | Echo (EU) | 26.03.2022 |
+| Dragonflight | Amirdrassil, the Dream's Hope | Fyrakk the Blazing | Echo (EU) | 26.11.2023 |
+| The War Within | Manaforge Omega | Dimensius, the All-Devouring | Liquid (US) | 24.08.2025 |
+| Midnight (Season 1) | March on Quel'Danas | Midnight Falls (L'ura) | Liquid (US) | 06.04.2026 |
+
+Midnight Season 2 (The Venomous Abyss, seit 18.08.2026) läuft laut Quelle noch
+("Status: In Progress") — Boss-Roster ist bekannt, World-Firsts noch nicht,
+daher ohne Kill-Datensätze angelegt statt Ergebnisse zu erfinden.
+
+Die Guild-Zuordnung läuft über `HistorySeederHelpers.GetOrAddGuildAsync`, das
+zuerst bereits gespeicherte/getrackte Gilden per Name wiederverwendet — Gilden
+wie Method, Paragon, Liquid oder Echo treten über mehrere Addons hinweg auf und
+bekommen so korrekt eine einzige Guild-Zeile statt Duplikaten pro Seeder
+(wichtig für das Gilden-Profil-Feature).
+
+Damit ist die manuell kuratierte Historie durchgängig bis zum aktuellen Addon
+importiert. Ab Cataclysm/Mists of Pandaria (verlässliche Warcraft-Logs-Abdeckung)
+könnte ein späterer Import stattdessen `WarcraftLogsClient` wiederverwenden, um
+Guild-Reports vergangener Tiers systematisch statt Boss-für-Boss aus einer
+Zweitquelle abzufragen.
 
 ## Design-System
 
@@ -159,9 +197,8 @@ Cinzel/Barlow Condensed/Inter/JetBrains Mono).
 2. **Live-Tracking** (erledigt): SignalR-Hub + Warcraft-Logs-Polling für
    automatische Kill-/Pull-Erkennung der aktuellen Mythic-Race, siehe
    „Warcraft-Logs-Live-Tracking" unten.
-3. **Historie-Import** (aktuell): Vanilla-Ära manuell kuratiert
-   (`Data/VanillaHistorySeeder.cs`), ab Cataclysm später via Warcraft-Logs-API.
-   Siehe „Historie-Import" unten.
+3. **Historie-Import** (erledigt): manuell kuratiert von Classic bis Midnight
+   (`Data/*HistorySeeder.cs`), siehe „Historie-Import" unten.
 4. Community-Beitrags-Workflow + Moderation (JWT-Auth ist im Backend
    bereits verdrahtet, `POST /api/kills/submit` erfordert `[Authorize]`).
 5. Benachrichtigungen/Discord-Integration.

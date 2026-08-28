@@ -15,11 +15,16 @@ public static class DbSeeder
         "Grim Custodian", "Twin Sovereigns", "Ashen Court", "Voidbound Herald",
     ];
 
+    // Eigener Expansion-Name (statt "The War Within"), damit dieser fiktive Demo-Datensatz
+    // nicht mit der echten, quellenbasierten TWW-Historie aus TheWarWithinHistorySeeder
+    // kollidiert — beide dürfen unabhängig voneinander existieren.
+    private const string DemoExpansionName = "The War Within — Live Demo";
+
     public static async Task SeedAsync(VanguardDbContext db)
     {
-        if (await db.Expansions.AnyAsync()) return;
+        if (await db.Expansions.AnyAsync(e => e.Name == DemoExpansionName)) return;
 
-        var expansion = new Expansion { Id = Guid.NewGuid(), Name = "The War Within", ReleaseDate = new DateOnly(2024, 8, 26) };
+        var expansion = new Expansion { Id = Guid.NewGuid(), Name = DemoExpansionName, ReleaseDate = new DateOnly(2024, 8, 26) };
         var season = new Season
         {
             Id = Guid.NewGuid(),

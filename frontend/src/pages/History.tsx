@@ -31,9 +31,14 @@ export function History() {
   const { data: tiers, isLoading } = useHistory({ expansion });
 
   const expansions = [
+    'Midnight',
     'The War Within',
     'Dragonflight',
     'Shadowlands',
+    'Battle for Azeroth',
+    'Legion',
+    'Warlords of Draenor',
+    'Mists of Pandaria',
     'Cataclysm',
     'Wrath of the Lich King',
     'The Burning Crusade',

@@ -116,33 +116,6 @@ function bossesOf(names: string[], killedCount: number): HistoryBoss[] {
 }
 
 export const mockHistory: HistoryTier[] = [
-  {
-    expansion: 'The War Within',
-    season: 2,
-    raidName: 'Nerub-ar Sanctum',
-    worldFirstGuild: 'Liquid',
-    pullCount: 892,
-    killDate: '2025-03-14',
-    bosses: [],
-  },
-  {
-    expansion: 'Dragonflight',
-    season: 4,
-    raidName: 'Amirdrassil',
-    worldFirstGuild: 'Echo',
-    pullCount: 634,
-    killDate: '2023-12-01',
-    bosses: [],
-  },
-  {
-    expansion: 'Shadowlands',
-    season: 4,
-    raidName: 'Sepulcher of the First Ones',
-    worldFirstGuild: 'Echo',
-    pullCount: 1063,
-    killDate: '2022-04-01',
-    bosses: [],
-  },
   // Wrath of the Lich King: World-First-Ergebnisse community-kuratiert nach Method
   // ("Wrath of the Lich King Raid History", method.gg/raid-history/wrath-of-the-lich-king).
   {
@@ -201,9 +174,9 @@ export const mockHistory: HistoryTier[] = [
       [
         'Flame Leviathan', 'Ignis the Furnace Master', 'Razorscale', 'XT-002 Deconstructor',
         'Assembly of Iron', 'Kologarn', 'Auriaya', 'Hodir', 'Thorim', 'Freya',
-        'Mimiron', 'General Vezax', 'Yogg-Saron', 'Algalon the Observer',
+        'Mimiron', 'General Vezax', 'Yogg-Saron',
       ],
-      14,
+      13,
     ),
   },
   {
@@ -527,6 +500,457 @@ export const mockHistory: HistoryTier[] = [
     bosses: bossesOf(
       ['Kalecgos', 'Brutallus', 'Felmyst', 'Eredar Twins', 'M\'uru', 'Kil\'jaeden'],
       6,
+    ),
+  },
+  // Mists of Pandaria bis Midnight: World-First-Ergebnisse community-kuratiert nach
+  // Method (method.gg/raid-history/<addon>). Die Quelle dokumentiert hier jeden
+  // Boss einzeln mit eigener Gilde/Datum — im Mock-Modus wird das auf den finalen
+  // Boss der Boss-Rail verdichtet (siehe HistoryTile-Backend-DTO für die volle Kette).
+  {
+    expansion: 'Mists of Pandaria',
+    season: 1,
+    raidName: 'Mogu\'shan Vaults',
+    worldFirstGuild: 'Method',
+    pullCount: 0,
+    killDate: '2012-10-12',
+    bosses: bossesOf(
+      [
+        'The Stone Guard', 'Feng the Accursed', 'Gara\'jal the Spiritbinder',
+        'The Spirit Kings', 'Elegon', 'Will of the Emperor',
+      ],
+      6,
+    ),
+  },
+  {
+    expansion: 'Mists of Pandaria',
+    season: 1,
+    raidName: 'Heart of Fear',
+    worldFirstGuild: 'Blood Legion',
+    pullCount: 0,
+    killDate: '2012-11-11',
+    bosses: bossesOf(
+      [
+        'Imperial Vizier Zor\'lok', 'Blade Lord Ta\'yak', 'Garalon',
+        'Wind Lord Mel\'jarak', 'Amber-Shaper Un\'sok', 'Empress Shek\'zeer',
+      ],
+      6,
+    ),
+  },
+  {
+    expansion: 'Mists of Pandaria',
+    season: 1,
+    raidName: 'Terrace of Endless Spring',
+    worldFirstGuild: 'Method',
+    pullCount: 0,
+    killDate: '2012-11-25',
+    bosses: bossesOf(
+      ['Protectors of the Endless', 'Tsulong', 'Lei Shi', 'Sha of Fear'],
+      4,
+    ),
+  },
+  {
+    expansion: 'Mists of Pandaria',
+    season: 1,
+    raidName: 'Throne of Thunder',
+    worldFirstGuild: 'Method',
+    pullCount: 0,
+    killDate: '2013-03-26',
+    bosses: bossesOf(
+      [
+        'Jin\'rokh the Breaker', 'Horridon', 'Council of Elders', 'Tortos', 'Megaera',
+        'Ji-Kun', 'Durumu the Forgotten', 'Primordius', 'Dark Animus', 'Iron Qon',
+        'Twin Consorts', 'Ra-den', 'Lei Shen',
+      ],
+      13,
+    ),
+  },
+  {
+    expansion: 'Mists of Pandaria',
+    season: 1,
+    raidName: 'Siege of Orgrimmar',
+    worldFirstGuild: 'Method',
+    pullCount: 0,
+    killDate: '2013-10-01',
+    bosses: bossesOf(
+      [
+        'Immerseus', 'Fallen Protectors', 'Norushen', 'Sha of Pride', 'Galakras',
+        'Iron Juggernaut', 'Kor\'kron Dark Shaman', 'General Nazgrim', 'Malkorok',
+        'Spoils of Pandaria', 'Thok the Bloodthirsty', 'Siegecrafter Blackfuse',
+        'Paragons of the Klaxxi', 'Garrosh Hellscream',
+      ],
+      14,
+    ),
+  },
+  {
+    expansion: 'Warlords of Draenor',
+    season: 1,
+    raidName: 'Highmaul',
+    worldFirstGuild: 'Paragon',
+    pullCount: 0,
+    killDate: '2014-12-13',
+    bosses: bossesOf(
+      [
+        'Kargath Bladefist', 'Brackenspore', 'Twin Ogron', 'Ko\'ragh',
+        'Tectus', 'The Butcher', 'Imperator Mar\'gok',
+      ],
+      7,
+    ),
+  },
+  {
+    expansion: 'Warlords of Draenor',
+    season: 1,
+    raidName: 'Blackrock Foundry',
+    worldFirstGuild: 'Method',
+    pullCount: 0,
+    killDate: '2015-02-20',
+    bosses: bossesOf(
+      [
+        'Oregorger the Devourer', 'Gruul', 'Hans\'gar & Franzok', 'Beastlord Darmac',
+        'Flamebender Ka\'graz', 'Operator Thogar', 'Kromog', 'The Iron Maidens', 'Blast Furnace', 'Blackhand',
+      ],
+      10,
+    ),
+  },
+  {
+    expansion: 'Warlords of Draenor',
+    season: 1,
+    raidName: 'Hellfire Citadel',
+    worldFirstGuild: 'Method',
+    pullCount: 0,
+    killDate: '2015-07-16',
+    bosses: bossesOf(
+      [
+        'Hellfire Assault', 'Iron Reaver', 'Kormrok', 'Hellfire High Council', 'Kilrogg Deadeye',
+        'Gorefiend', 'Shadow-Lord Iskar', 'Fel Lord Zakuun', 'Socrethar the Eternal',
+        'Tyrant Velhari', 'Xhul\'horac', 'Mannoroth', 'Archimonde',
+      ],
+      13,
+    ),
+  },
+  {
+    expansion: 'Legion',
+    season: 1,
+    raidName: 'The Emerald Nightmare',
+    worldFirstGuild: 'Exorsus',
+    pullCount: 0,
+    killDate: '2016-09-29',
+    bosses: bossesOf(
+      ['Nythendra', 'Elerethe Renferal', 'Ursoc', 'Dragons of Nightmare', 'Il\'gynoth', 'Cenarius', 'Xavius'],
+      7,
+    ),
+  },
+  {
+    expansion: 'Legion',
+    season: 1,
+    raidName: 'Trial of Valor',
+    worldFirstGuild: 'Method',
+    pullCount: 0,
+    killDate: '2016-11-18',
+    bosses: bossesOf(['Odyn', 'Guarm', 'Helya'], 3),
+  },
+  {
+    expansion: 'Legion',
+    season: 1,
+    raidName: 'The Nighthold',
+    worldFirstGuild: 'Exorsus',
+    pullCount: 248,
+    killDate: '2017-02-04',
+    bosses: bossesOf(
+      [
+        'Skorpyron', 'Chronomatic Anomaly', 'Trilliax', 'Spellblade Aluriel', 'Tichondrius',
+        'Krosus', 'High-Botanist Tel\'arn', 'Star-Augur Etraeus', 'Grand-Magistrix Elisande', 'Gul\'dan',
+      ],
+      10,
+    ),
+  },
+  {
+    expansion: 'Legion',
+    season: 1,
+    raidName: 'Tomb of Sargeras',
+    worldFirstGuild: 'Method',
+    pullCount: 654,
+    killDate: '2017-07-16',
+    bosses: bossesOf(
+      [
+        'Goroth', 'Demonic Inquisition', 'Harjatan', 'Sisters of the Moon', 'Mistress Sassz\'ine',
+        'The Desolate Host', 'Maiden of Vigilance', 'Fallen Avatar', 'Kil\'jaeden',
+      ],
+      9,
+    ),
+  },
+  {
+    expansion: 'Legion',
+    season: 1,
+    raidName: 'Antorus, the Burning Throne',
+    worldFirstGuild: 'Method',
+    pullCount: 320,
+    killDate: '2017-12-13',
+    bosses: bossesOf(
+      [
+        'Garothi Worldbreaker', 'Felhounds of Sargeras', 'Portal Keeper Hasabel', 'Antoran High Command',
+        'Eonar the Life-Binder', 'Imonar the Soulhunter', 'Kin\'garoth', 'Varimathras',
+        'The Coven of Shivarra', 'Aggramar', 'Argus the Unmaker',
+      ],
+      11,
+    ),
+  },
+  {
+    expansion: 'Battle for Azeroth',
+    season: 1,
+    raidName: 'Uldir',
+    worldFirstGuild: 'Method',
+    pullCount: 285,
+    killDate: '2018-09-19',
+    bosses: bossesOf(
+      [
+        'Taloc the Corrupted', 'Mother', 'Zek\'voz, Herald of N\'zoth', 'Vectis',
+        'Fetid Devourer', 'Zul, Reborn', 'Mythrax the Unraveler', 'G\'huun',
+      ],
+      8,
+    ),
+  },
+  {
+    expansion: 'Battle for Azeroth',
+    season: 1,
+    raidName: 'Battle of Dazar\'alor',
+    worldFirstGuild: 'Method',
+    pullCount: 346,
+    killDate: '2019-02-05',
+    bosses: bossesOf(
+      [
+        'Champion of the Light', 'Grong', 'Jadefire Masters', 'Opulence', 'Conclave of the Chosen',
+        'King Rastakhan', 'High Tinker Mekkatorque', 'Stormwall Blockade', 'Lady Jaina Proudmoore',
+      ],
+      9,
+    ),
+  },
+  {
+    expansion: 'Battle for Azeroth',
+    season: 1,
+    raidName: 'Crucible of Storms',
+    worldFirstGuild: 'Pieces',
+    pullCount: 700,
+    killDate: '2019-05-03',
+    bosses: bossesOf(['The Restless Cabal', 'Uu\'nat, Harbinger of the Void'], 2),
+  },
+  {
+    expansion: 'Battle for Azeroth',
+    season: 1,
+    raidName: 'The Eternal Palace',
+    worldFirstGuild: 'Method',
+    pullCount: 359,
+    killDate: '2019-07-28',
+    bosses: bossesOf(
+      [
+        'Abyssal Commander Sivara', 'Blackwater Behemoth', 'Radiance of Azshara', 'Lady Ashvane',
+        'Orgozoa', 'The Queen\'s Court', 'Za\'qul', 'Queen Azshara',
+      ],
+      8,
+    ),
+  },
+  {
+    expansion: 'Battle for Azeroth',
+    season: 1,
+    raidName: 'Ny\'alotha, the Waking City',
+    worldFirstGuild: 'Complexity Limit',
+    pullCount: 270,
+    killDate: '2020-02-06',
+    bosses: bossesOf(
+      [
+        'Wrathion', 'Maut', 'The Prophet Skitra', 'Dark Inquisitor Xanesh', 'The Hivemind',
+        'Shad\'har the Insatiable', 'Drest\'agath', 'Vexiona', 'Ra-den the Despoiled',
+        'Il\'gynoth', 'Carapace of N\'Zoth', 'N\'Zoth the Corruptor',
+      ],
+      12,
+    ),
+  },
+  {
+    expansion: 'Shadowlands',
+    season: 1,
+    raidName: 'Castle Nathria',
+    worldFirstGuild: 'Complexity Limit',
+    pullCount: 0,
+    killDate: '2020-12-23',
+    bosses: bossesOf(
+      [
+        'Shriekwing', 'Altimor the Huntsman', 'Hungering Destroyer', 'Artificer Xy\'Mox',
+        'Sun King\'s Salvation', 'Lady Inerva Darkvein', 'The Council of Blood', 'Sludgefist',
+        'Stone Legion Generals', 'Sire Denathrius',
+      ],
+      10,
+    ),
+  },
+  {
+    expansion: 'Shadowlands',
+    season: 1,
+    raidName: 'Sanctum of Domination',
+    worldFirstGuild: 'Echo',
+    pullCount: 0,
+    killDate: '2021-07-20',
+    bosses: bossesOf(
+      [
+        'The Tarragrue', 'Eye of the Jailer', 'The Nine', 'Remnant of Ner\'zhul',
+        'Soulrender Dormazain', 'Painsmith Raznal', 'Guardian of the First Ones',
+        'Fatescribe Roh-Kalo', 'Kel\'Thuzad', 'Sylvanas Windrunner',
+      ],
+      10,
+    ),
+  },
+  {
+    expansion: 'Shadowlands',
+    season: 1,
+    raidName: 'Sepulcher of the First Ones',
+    worldFirstGuild: 'Echo',
+    pullCount: 0,
+    killDate: '2022-03-26',
+    bosses: bossesOf(
+      [
+        'Vigilant Guardian', 'Skolex, the Insatiable Ravener', 'Artificer Xy\'mox',
+        'Dausegne, the Fallen Oracle', 'Prototype Pantheon', 'Lihuvim, Principal Architect',
+        'Halondrus the Reclaimer', 'Anduin Wrynn', 'Lords of Dread', 'Rygelon', 'The Jailer, Zovaal',
+      ],
+      11,
+    ),
+  },
+  {
+    expansion: 'Dragonflight',
+    season: 1,
+    raidName: 'Vault of the Incarnates',
+    worldFirstGuild: 'Echo',
+    pullCount: 0,
+    killDate: '2022-12-23',
+    bosses: bossesOf(
+      [
+        'Eranog', 'Terros', 'The Primal Council', 'Sennarth, the Cold Breath',
+        'Dathea, Ascended', 'Kurog Grimtotem', 'Broodkeeper Diurna', 'Raszageth the Storm-Eater',
+      ],
+      8,
+    ),
+  },
+  {
+    expansion: 'Dragonflight',
+    season: 1,
+    raidName: 'Aberrus, the Shadowed Crucible',
+    worldFirstGuild: 'Liquid',
+    pullCount: 0,
+    killDate: '2023-05-15',
+    bosses: bossesOf(
+      [
+        'Kazzara, the Hellforged', 'Assault of the Zaqali', 'The Amalgamation Chamber',
+        'The Forgotten Experiments', 'Rashok, the Elder', 'The Vigilant Steward, Zskarn',
+        'Magmorax', 'Echo of Neltharion', 'Scalecommander Sarkareth',
+      ],
+      9,
+    ),
+  },
+  {
+    expansion: 'Dragonflight',
+    season: 1,
+    raidName: 'Amirdrassil, the Dream\'s Hope',
+    worldFirstGuild: 'Echo',
+    pullCount: 0,
+    killDate: '2023-11-26',
+    bosses: bossesOf(
+      [
+        'Gnarlroot', 'Igira the Cruel', 'Volcoross', 'Council of Dreams',
+        'Larodar, Keeper of the Flame', 'Nymue, Weaver of the Cycle', 'Smolderon',
+        'Tindral Sageswift, Seer of the Flame', 'Fyrakk the Blazing',
+      ],
+      9,
+    ),
+  },
+  {
+    expansion: 'The War Within',
+    season: 1,
+    raidName: 'Nerub\'ar Palace',
+    worldFirstGuild: 'Liquid',
+    pullCount: 0,
+    killDate: '2024-09-29',
+    bosses: bossesOf(
+      [
+        'Ulgrax the Devourer', 'The Bloodbound Horror', 'Sikran, Captain of the Sureki', 'Rasha\'nan',
+        'Broodtwister Ovi\'nax', 'Nexus-Princess Ky\'veza', 'The Silken Court', 'Queen Ansurek',
+      ],
+      8,
+    ),
+  },
+  {
+    expansion: 'The War Within',
+    season: 1,
+    raidName: 'Liberation of Undermine',
+    worldFirstGuild: 'Liquid',
+    pullCount: 0,
+    killDate: '2025-03-16',
+    bosses: bossesOf(
+      [
+        'Vexie and the Geargrinders', 'Cauldron of Carnage', 'Rik Reverb', 'Stix Bunkjunker',
+        'Sprocketmonger Lockenstock', 'The One-Armed Bandit', 'Mug\'Zee, Heads of Security',
+        'Chrome King Gallywix',
+      ],
+      8,
+    ),
+  },
+  {
+    expansion: 'The War Within',
+    season: 1,
+    raidName: 'Manaforge Omega',
+    worldFirstGuild: 'Liquid',
+    pullCount: 0,
+    killDate: '2025-08-24',
+    bosses: bossesOf(
+      [
+        'Plexus Sentinel', 'Soulbinder Naazindhri', 'Loom\'ithar', 'Forgeweaver Araz',
+        'The Soul Hunters', 'Fractillus', 'Nexus-King Salhadaar', 'Dimensius, the All-Devouring',
+      ],
+      8,
+    ),
+  },
+  {
+    expansion: 'Midnight',
+    season: 1,
+    raidName: 'The Voidspire',
+    worldFirstGuild: 'Liquid',
+    pullCount: 0,
+    killDate: '2026-03-27',
+    bosses: bossesOf(
+      [
+        'Imperator Averzian', 'Vorasius', 'Fallen-King Salhadaar',
+        'Vaelgor & Ezzorak', 'Lightblinded Vanguard', 'Crown of the Cosmos',
+      ],
+      6,
+    ),
+  },
+  {
+    expansion: 'Midnight',
+    season: 1,
+    raidName: 'The Dreamrift',
+    worldFirstGuild: 'Liquid',
+    pullCount: 0,
+    killDate: '2026-03-25',
+    bosses: bossesOf(['Chimaerus, the Undreamt God'], 1),
+  },
+  {
+    expansion: 'Midnight',
+    season: 1,
+    raidName: 'March on Quel\'Danas',
+    worldFirstGuild: 'Liquid',
+    pullCount: 0,
+    killDate: '2026-04-06',
+    bosses: bossesOf(['Belo\'ren, Child of Al\'ar', 'Midnight Falls (L\'ura)'], 2),
+  },
+  {
+    expansion: 'Midnight',
+    season: 2,
+    raidName: 'The Venomous Abyss',
+    worldFirstGuild: '—',
+    pullCount: 0,
+    killDate: '',
+    bosses: bossesOf(
+      [
+        'Nek\'zali the Soulcoiler', 'Entombed Sentinels', 'The Lost Explorers',
+        'Vashnik the Malignant', 'Sszorak', 'The Twin Fangs', 'The Coiled Altar', 'Ula\'tek',
+      ],
+      0,
     ),
   },
 ];

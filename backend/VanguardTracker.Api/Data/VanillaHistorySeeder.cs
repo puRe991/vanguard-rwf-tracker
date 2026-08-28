@@ -17,8 +17,8 @@ namespace VanguardTracker.Api.Data;
 ///   abgerufen 2026, und werden nur übernommen, wenn die Quelle sie tatsächlich nennt.
 ///   Für Zul'Gurub und Ruins of Ahn'Qiraj liefert die Quelle keine Gilden-/Datumsangaben
 ///   — diese Raid-Tiers bleiben ohne Kill-Datensatz und warten auf Community-Beiträge
-///   über den Submit-Kill-Workflow (Moderation vor Veröffentlichung), statt dass Daten
-///   erfunden werden. Pull-Zahlen sind für die Vanilla-Ära generell nicht überliefert.
+///   über den Submit-Kill-Workflow (Moderation vor Veröffentlichung). Pull-Zahlen sind
+///   für die Vanilla-Ära generell nicht überliefert.
 /// </summary>
 public static class VanillaHistorySeeder
 {
@@ -41,55 +41,49 @@ public static class VanillaHistorySeeder
             Number = 1,
             StartDate = expansion.ReleaseDate,
         };
-
         db.Expansions.Add(expansion);
         db.Seasons.Add(season);
 
-        var guilds = new Dictionary<string, Guild>();
-        Guild GetOrAddGuild(string name, string region)
-        {
-            if (guilds.TryGetValue(name, out var existing)) return existing;
-            var guild = new Guild { Id = Guid.NewGuid(), Name = name, Region = region };
-            guilds[name] = guild;
-            db.Guilds.Add(guild);
-            return guild;
-        }
+        var ruined = await HistorySeederHelpers.GetOrAddGuildAsync(db, "Ruined", "US");
+        var ascent = await HistorySeederHelpers.GetOrAddGuildAsync(db, "Ascent", "US");
+        var drama = await HistorySeederHelpers.GetOrAddGuildAsync(db, "Drama", "US");
+        var nihilum = await HistorySeederHelpers.GetOrAddGuildAsync(db, "Nihilum", "EU");
 
-        AddRaidWithConfirmedKill(db, season.Id,
-            raidName: "Onyxia's Lair",
-            openAt: new DateTimeOffset(2004, 11, 23, 0, 0, 0, TimeSpan.Zero),
-            bossNames: ["Onyxia"],
-            worldFirstGuild: GetOrAddGuild("Ruined", "US"),
-            killAt: new DateTimeOffset(2005, 1, 30, 0, 0, 0, TimeSpan.Zero));
+        HistorySeederHelpers.AddRaidWithFinalBossKill(db, season.Id,
+            "Onyxia's Lair",
+            new DateTimeOffset(2004, 11, 23, 0, 0, 0, TimeSpan.Zero),
+            ["Onyxia"],
+            ruined,
+            new DateTimeOffset(2005, 1, 30, 0, 0, 0, TimeSpan.Zero),
+            SourceUrl);
 
-        AddRaidWithConfirmedKill(db, season.Id,
-            raidName: "Molten Core",
-            openAt: new DateTimeOffset(2004, 11, 23, 0, 0, 0, TimeSpan.Zero),
-            bossNames:
+        HistorySeederHelpers.AddRaidWithFinalBossKill(db, season.Id,
+            "Molten Core",
+            new DateTimeOffset(2004, 11, 23, 0, 0, 0, TimeSpan.Zero),
             [
                 "Lucifron", "Magmadar", "Gehennas", "Garr", "Baron Geddon",
                 "Shazzrah", "Sulfuron Harbinger", "Golemagg the Incinerator",
                 "Majordomo Executus", "Ragnaros",
             ],
-            worldFirstGuild: GetOrAddGuild("Ascent", "US"),
-            killAt: new DateTimeOffset(2005, 4, 25, 0, 0, 0, TimeSpan.Zero));
+            ascent,
+            new DateTimeOffset(2005, 4, 25, 0, 0, 0, TimeSpan.Zero),
+            SourceUrl);
 
-        AddRaidWithConfirmedKill(db, season.Id,
-            raidName: "Blackwing Lair",
-            openAt: new DateTimeOffset(2005, 7, 12, 0, 0, 0, TimeSpan.Zero),
-            bossNames:
+        HistorySeederHelpers.AddRaidWithFinalBossKill(db, season.Id,
+            "Blackwing Lair",
+            new DateTimeOffset(2005, 7, 12, 0, 0, 0, TimeSpan.Zero),
             [
                 "Razorgore the Untamed", "Vaelastrasz the Corrupt", "Broodlord Lashlayer",
                 "Firemaw", "Ebonroc", "Flamegor", "Chromaggus", "Nefarian",
             ],
-            worldFirstGuild: GetOrAddGuild("Drama", "US"),
-            killAt: new DateTimeOffset(2005, 9, 26, 0, 0, 0, TimeSpan.Zero));
+            drama,
+            new DateTimeOffset(2005, 9, 26, 0, 0, 0, TimeSpan.Zero),
+            SourceUrl);
 
         // Zul'Gurub: Quelle nennt nur das Release-Datum, keine World-First-Gilde/Kill-Datum.
-        AddRaidWithoutConfirmedKill(db, season.Id,
-            raidName: "Zul'Gurub",
-            openAt: new DateTimeOffset(2005, 9, 13, 0, 0, 0, TimeSpan.Zero),
-            bossNames:
+        HistorySeederHelpers.AddRaidWithBossesOnly(db, season.Id,
+            "Zul'Gurub",
+            new DateTimeOffset(2005, 9, 13, 0, 0, 0, TimeSpan.Zero),
             [
                 "High Priestess Jeklik", "High Priest Venoxis", "High Priestess Mar'li",
                 "Bloodlord Mandokir", "Gahz'rilla", "Wushoolay", "Renataki", "Hazza'rah",
@@ -98,31 +92,29 @@ public static class VanillaHistorySeeder
             ]);
 
         // Ruins of Ahn'Qiraj (AQ20): in der Quelle nicht mit Datum/Gilde belegt.
-        AddRaidWithoutConfirmedKill(db, season.Id,
-            raidName: "Ruins of Ahn'Qiraj",
-            openAt: new DateTimeOffset(2006, 1, 3, 0, 0, 0, TimeSpan.Zero),
-            bossNames:
+        HistorySeederHelpers.AddRaidWithBossesOnly(db, season.Id,
+            "Ruins of Ahn'Qiraj",
+            new DateTimeOffset(2006, 1, 3, 0, 0, 0, TimeSpan.Zero),
             [
                 "Kurinnaxx", "General Rajaxx", "Moam", "Buru the Gorger",
                 "Ayamiss the Hunter", "Ossirian the Unscarred",
             ]);
 
-        AddRaidWithConfirmedKill(db, season.Id,
-            raidName: "Temple of Ahn'Qiraj",
-            openAt: new DateTimeOffset(2006, 1, 3, 0, 0, 0, TimeSpan.Zero),
-            bossNames:
+        HistorySeederHelpers.AddRaidWithFinalBossKill(db, season.Id,
+            "Temple of Ahn'Qiraj",
+            new DateTimeOffset(2006, 1, 3, 0, 0, 0, TimeSpan.Zero),
             [
                 "The Prophet Skeram", "Lord Kri", "Princess Yauj", "Vem",
                 "Battleguard Sartura", "Fankriss the Unyielding", "Viscidus",
                 "Princess Huhuran", "Twin Emperors Vek'lor and Veknilash", "Ouro", "C'Thun",
             ],
-            worldFirstGuild: GetOrAddGuild("Nihilum", "EU"),
-            killAt: new DateTimeOffset(2006, 4, 25, 0, 0, 0, TimeSpan.Zero));
+            nihilum,
+            new DateTimeOffset(2006, 4, 25, 0, 0, 0, TimeSpan.Zero),
+            SourceUrl);
 
-        AddRaidWithConfirmedKill(db, season.Id,
-            raidName: "Naxxramas",
-            openAt: new DateTimeOffset(2006, 6, 20, 0, 0, 0, TimeSpan.Zero),
-            bossNames:
+        HistorySeederHelpers.AddRaidWithFinalBossKill(db, season.Id,
+            "Naxxramas",
+            new DateTimeOffset(2006, 6, 20, 0, 0, 0, TimeSpan.Zero),
             [
                 "Anub'Rekhan", "Grand Widow Faerlina", "Maexxna",
                 "Noth the Plaguebringer", "Heigan the Unclean", "Loatheb",
@@ -130,67 +122,10 @@ public static class VanillaHistorySeeder
                 "Patchwerk", "Grobbulus", "Gluth", "Thaddius",
                 "Sapphiron", "Kel'Thuzad",
             ],
-            worldFirstGuild: GetOrAddGuild("Nihilum", "EU"),
-            killAt: new DateTimeOffset(2006, 9, 7, 0, 0, 0, TimeSpan.Zero));
+            nihilum,
+            new DateTimeOffset(2006, 9, 7, 0, 0, 0, TimeSpan.Zero),
+            SourceUrl);
 
         await db.SaveChangesAsync();
-    }
-
-    private static void AddRaidWithConfirmedKill(
-        VanguardDbContext db,
-        Guid seasonId,
-        string raidName,
-        DateTimeOffset openAt,
-        string[] bossNames,
-        Guild worldFirstGuild,
-        DateTimeOffset killAt)
-    {
-        AddRaidWithBosses(db, seasonId, raidName, openAt, bossNames, out var bosses);
-        var finalBoss = bosses[^1];
-
-        db.Kills.Add(new Kill
-        {
-            Id = Guid.NewGuid(),
-            BossId = finalBoss.Id,
-            GuildId = worldFirstGuild.Id,
-            Timestamp = killAt,
-            PullCount = 0, // von der Quelle nicht beziffert
-            SourceUrl = SourceUrl,
-            Status = KillStatus.Confirmed,
-        });
-    }
-
-    private static void AddRaidWithoutConfirmedKill(
-        VanguardDbContext db,
-        Guid seasonId,
-        string raidName,
-        DateTimeOffset openAt,
-        string[] bossNames)
-    {
-        AddRaidWithBosses(db, seasonId, raidName, openAt, bossNames, out _);
-    }
-
-    private static void AddRaidWithBosses(
-        VanguardDbContext db,
-        Guid seasonId,
-        string raidName,
-        DateTimeOffset openAt,
-        string[] bossNames,
-        out List<Boss> bosses)
-    {
-        var raid = new Raid
-        {
-            Id = Guid.NewGuid(),
-            SeasonId = seasonId,
-            Name = raidName,
-            BossCount = bossNames.Length,
-            NormalOpenAt = openAt,
-        };
-        bosses = bossNames
-            .Select((name, i) => new Boss { Id = Guid.NewGuid(), RaidId = raid.Id, Name = name, Order = i })
-            .ToList();
-
-        db.Raids.Add(raid);
-        db.Bosses.AddRange(bosses);
     }
 }
