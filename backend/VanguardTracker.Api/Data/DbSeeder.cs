@@ -41,6 +41,10 @@ public static class DbSeeder
             .Select((name, i) => new Boss { Id = Guid.NewGuid(), RaidId = raid.Id, Name = name, Order = i })
             .ToList();
 
+        // WarcraftLogs*-Felder bewusst leer gelassen: Ohne Mapping überspringt der
+        // WarcraftLogsPollingService diese Gilden. Für echtes Live-Tracking die Felder
+        // mit den WCL-Werten (Gildenname/Server-Slug/Region) und Boss.WarcraftLogsEncounterId
+        // befüllen — siehe README.
         var guilds = new[]
         {
             new Guild { Id = Guid.NewGuid(), Name = "Liquid", Region = "EU", FoundedYear = 2016 },

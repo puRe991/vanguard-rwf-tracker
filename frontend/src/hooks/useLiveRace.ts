@@ -1,18 +1,36 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import * as signalR from '@microsoft/signalr';
 import { fetchCurrentRace, fetchLiveTicker } from '../lib/api';
+import { getRaceHubConnection } from '../lib/raceHubConnection';
 import type { LiveTickerEvent } from '../types';
 
-const HUB_URL = import.meta.env.VITE_RACE_HUB_URL ?? '/hubs/race';
 const USE_MOCKS = import.meta.env.VITE_USE_MOCKS !== 'false';
 
 export function useLiveRace() {
-  return useQuery({
+  const queryClient = useQueryClient();
+  const query = useQuery({
     queryKey: ['race', 'current'],
     queryFn: fetchCurrentRace,
-    refetchInterval: USE_MOCKS ? false : 30_000,
+    // SignalR treibt Aktualisierungen live über RaceUpdated; das Intervall ist nur
+    // ein Fallback, falls die Hub-Verbindung mal ausfällt.
+    refetchInterval: USE_MOCKS ? false : 60_000,
   });
+
+  useEffect(() => {
+    if (USE_MOCKS) return;
+
+    const connection = getRaceHubConnection();
+    const onRaceUpdated = () => {
+      queryClient.invalidateQueries({ queryKey: ['race', 'current'] });
+    };
+
+    connection.on('RaceUpdated', onRaceUpdated);
+    return () => {
+      connection.off('RaceUpdated', onRaceUpdated);
+    };
+  }, [queryClient]);
+
+  return query;
 }
 
 export function useLiveTicker() {
@@ -25,19 +43,14 @@ export function useLiveTicker() {
   useEffect(() => {
     if (USE_MOCKS) return;
 
-    const connection = new signalR.HubConnectionBuilder()
-      .withUrl(HUB_URL)
-      .withAutomaticReconnect()
-      .build();
-
-    connection.on('TickerEvent', (event: LiveTickerEvent) => {
+    const connection = getRaceHubConnection();
+    const onTickerEvent = (event: LiveTickerEvent) => {
       setLiveEvents((prev) => [event, ...prev].slice(0, 50));
-    });
+    };
 
-    connection.start().catch((err) => console.error('SignalR-Verbindung fehlgeschlagen', err));
-
+    connection.on('TickerEvent', onTickerEvent);
     return () => {
-      connection.stop();
+      connection.off('TickerEvent', onTickerEvent);
     };
   }, []);
 

@@ -1,10 +1,12 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using VanguardTracker.Api.Data;
 using VanguardTracker.Api.Hubs;
 using VanguardTracker.Api.Services;
+using VanguardTracker.Api.WarcraftLogs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,16 @@ builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<VanguardDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.Configure<WarcraftLogsOptions>(
+    builder.Configuration.GetSection(WarcraftLogsOptions.SectionName));
+
+// Singleton, damit der OAuth-Token-Cache über alle Polling-Zyklen erhalten bleibt.
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<WarcraftLogsAuthClient>(sp => new WarcraftLogsAuthClient(
+    sp.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(WarcraftLogsAuthClient)),
+    sp.GetRequiredService<IOptions<WarcraftLogsOptions>>()));
+builder.Services.AddHttpClient<WarcraftLogsClient>();
 
 builder.Services.AddHostedService<WarcraftLogsPollingService>();
 

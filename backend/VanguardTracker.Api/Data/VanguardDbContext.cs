@@ -11,6 +11,7 @@ public class VanguardDbContext(DbContextOptions<VanguardDbContext> options) : Db
     public DbSet<Boss> Bosses => Set<Boss>();
     public DbSet<Guild> Guilds => Set<Guild>();
     public DbSet<Kill> Kills => Set<Kill>();
+    public DbSet<EncounterProgress> EncounterProgresses => Set<EncounterProgress>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,5 +54,21 @@ public class VanguardDbContext(DbContextOptions<VanguardDbContext> options) : Db
 
         modelBuilder.Entity<Guild>()
             .HasIndex(g => g.Name);
+
+        modelBuilder.Entity<EncounterProgress>()
+            .HasOne(p => p.Guild)
+            .WithMany()
+            .HasForeignKey(p => p.GuildId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<EncounterProgress>()
+            .HasOne(p => p.Boss)
+            .WithMany()
+            .HasForeignKey(p => p.BossId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<EncounterProgress>()
+            .HasIndex(p => new { p.GuildId, p.BossId })
+            .IsUnique();
     }
 }
