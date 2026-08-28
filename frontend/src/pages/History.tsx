@@ -1,6 +1,30 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from '../hooks/useHistory';
+import type { HistoryBoss } from '../types';
+
+function HistoryBossRail({ bosses }: { bosses: HistoryBoss[] }) {
+  if (bosses.length === 0) return null;
+
+  return (
+    <div className="mt-3 flex flex-wrap gap-1.5">
+      {bosses.map((boss) => (
+        <div
+          key={boss.order}
+          title={boss.name}
+          className={[
+            'flex h-6 items-center rounded-full border px-2 text-[11px]',
+            boss.killed
+              ? 'border-gold bg-gold/15 text-gold-light'
+              : 'border-border bg-obsidian/40 text-text-muted',
+          ].join(' ')}
+        >
+          {boss.name}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export function History() {
   const [expansion, setExpansion] = useState<string | undefined>();
@@ -12,6 +36,7 @@ export function History() {
     'Shadowlands',
     'Cataclysm',
     'Wrath of the Lich King',
+    'The Burning Crusade',
     'Classic',
   ];
 
@@ -48,29 +73,33 @@ export function History() {
         {tiers?.map((tier) => (
           <div
             key={`${tier.expansion}-${tier.season}-${tier.raidName}`}
-            className="flex items-center justify-between rounded-[10px] border border-border bg-card p-4"
+            className="rounded-[10px] border border-border bg-card p-4"
           >
-            <div>
-              <div className="eyebrow text-[11px] text-text-muted">
-                {tier.expansion} · Season {tier.season}
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="eyebrow text-[11px] text-text-muted">
+                  {tier.expansion} · Season {tier.season}
+                </div>
+                <div className="font-headline text-xl">{tier.raidName}</div>
               </div>
-              <div className="font-headline text-xl">{tier.raidName}</div>
+              <div className="text-right">
+                {tier.worldFirstGuild === '—' ? (
+                  <Link to="/submit" className="text-sm text-ember-light hover:underline">
+                    Noch nicht dokumentiert — beitragen
+                  </Link>
+                ) : (
+                  <>
+                    <div className="text-gold-light">{tier.worldFirstGuild}</div>
+                    <div className="font-mono-num text-xs text-text-muted">
+                      {tier.pullCount > 0 ? `${tier.pullCount} Pulls · ` : ''}
+                      {new Date(tier.killDate).toLocaleDateString('de-DE')}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-            <div className="text-right">
-              {tier.worldFirstGuild === '—' ? (
-                <Link to="/submit" className="text-sm text-ember-light hover:underline">
-                  Noch nicht dokumentiert — beitragen
-                </Link>
-              ) : (
-                <>
-                  <div className="text-gold-light">{tier.worldFirstGuild}</div>
-                  <div className="font-mono-num text-xs text-text-muted">
-                    {tier.pullCount > 0 ? `${tier.pullCount} Pulls · ` : ''}
-                    {new Date(tier.killDate).toLocaleDateString('de-DE')}
-                  </div>
-                </>
-              )}
-            </div>
+
+            <HistoryBossRail bosses={tier.bosses} />
           </div>
         ))}
       </div>

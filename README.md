@@ -86,12 +86,29 @@ Für die Vanilla-Ära (Classic, Season 1) gibt es keine API-Abdeckung, daher ist
 | Temple of Ahn'Qiraj | C'Thun | Nihilum (EU) | 25.04.2006 |
 | Naxxramas | Kel'Thuzad | Nihilum (EU) | 07.09.2006 |
 
+`Data/BurningCrusadeHistorySeeder.cs` führt dieselbe Kuration für The Burning
+Crusade fort, Quelle
+[method.gg/raid-history/the-burning-crusade](https://www.method.gg/raid-history/the-burning-crusade):
+
+| Raid | Finaler Boss | World-First-Gilde | Kill-Datum |
+|---|---|---|---|
+| Karazhan | — | — (nicht belegt) | — |
+| Gruul's Lair | Gruul the Dragonkiller | Nihilum (EU) | 03.02.2007 |
+| Magtheridon's Lair | Magtheridon | Nihilum (EU) | 24.02.2007 |
+| Serpentshrine Cavern | Lady Vashj | Nihilum (EU) | 29.03.2007 |
+| Tempest Keep: The Eye | Kael'thas Sunstrider | Nihilum (EU) | 25.05.2007 |
+| Black Temple | Illidan Stormrage | Nihilum (EU) | 05.06.2007 |
+| Mount Hyjal | Archimonde | Nihilum (EU) | 09.06.2007 |
+| Sunwell Plateau | Kil'jaeden | SK Gaming (EU) | 25.05.2008 |
+
 Jeder importierte Kill trägt die Quelle als `SourceUrl` (Beleg-Pflicht laut
-Datenmodell). Zul'Gurub und Ruins of Ahn'Qiraj werden bewusst ohne Kill-Datensatz
-angelegt, statt Daten zu erfinden — die History-Seite verlinkt dafür direkt auf
-den Community-Beitrags-Workflow (`/submit`). Pull-Zahlen sind für die
-Vanilla-Ära generell nicht überliefert und stehen daher auf `0`; die
-History-UI blendet `0 Pulls` aus statt sie als Fakt darzustellen.
+Datenmodell). Raids ohne belegte World-First-Angabe (Zul'Gurub, Ruins of
+Ahn'Qiraj, Karazhan) werden bewusst ohne Kill-Datensatz angelegt, statt Daten
+zu erfinden — die History-Seite verlinkt dafür direkt auf den
+Community-Beitrags-Workflow (`/submit`) und zeigt trotzdem die vollständige,
+dokumentierte Boss-Liste jedes Raids an. Pull-Zahlen sind für diese Ären
+generell nicht überliefert und stehen daher auf `0`; die History-UI blendet
+`0 Pulls` aus statt sie als Fakt darzustellen.
 
 Ab Cataclysm (verlässliche Warcraft-Logs-Abdeckung) soll ein späterer Import
 stattdessen `WarcraftLogsClient` wiederverwenden, um Guild-Reports vergangener

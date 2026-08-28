@@ -29,13 +29,16 @@ public record LiveTickerEventDto(
     string Kind // "kill" | "pull-milestone" | "live-start"
 );
 
+public record HistoryBossDto(string Name, int Order, bool Killed);
+
 public record HistoryTierDto(
     string Expansion,
     int Season,
     string RaidName,
     string WorldFirstGuild,
     int PullCount,
-    DateOnly KillDate
+    DateOnly KillDate,
+    List<HistoryBossDto> Bosses
 );
 
 public record PullSeriesPointDto(int PullNumber, DateTimeOffset Timestamp);

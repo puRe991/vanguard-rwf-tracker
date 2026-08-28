@@ -1,6 +1,7 @@
 import type {
   BossPullSeries,
   GuildRaceEntry,
+  HistoryBoss,
   HistoryTier,
   LiveTickerEvent,
 } from '../types';
@@ -110,6 +111,10 @@ export const mockTicker: LiveTickerEvent[] = [
   },
 ];
 
+function bossesOf(names: string[], killedCount: number): HistoryBoss[] {
+  return names.map((name, i) => ({ name, order: i, killed: i < killedCount }));
+}
+
 export const mockHistory: HistoryTier[] = [
   {
     expansion: 'The War Within',
@@ -118,6 +123,7 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: 'Liquid',
     pullCount: 892,
     killDate: '2025-03-14',
+    bosses: [],
   },
   {
     expansion: 'Dragonflight',
@@ -126,6 +132,7 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: 'Echo',
     pullCount: 634,
     killDate: '2023-12-01',
+    bosses: [],
   },
   {
     expansion: 'Shadowlands',
@@ -134,6 +141,7 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: 'Echo',
     pullCount: 1063,
     killDate: '2022-04-01',
+    bosses: [],
   },
   {
     expansion: 'Cataclysm',
@@ -142,6 +150,7 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: 'Paragon',
     pullCount: 219,
     killDate: '2011-07-14',
+    bosses: [],
   },
   {
     expansion: 'Wrath of the Lich King',
@@ -150,9 +159,11 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: 'Paragon',
     pullCount: 209,
     killDate: '2010-05-06',
+    bosses: [],
   },
-  // Vanilla: keine API-Abdeckung, community-kuratiert nach Method
-  // ("Vanilla Raid History of World Firsts", method.gg/raid-history).
+  // Vanilla: keine API-Abdeckung. World-First-Ergebnisse community-kuratiert nach
+  // Method ("Vanilla Raid History of World Firsts", method.gg/raid-history);
+  // Boss-Rosters sind dokumentierter Spiel-Content.
   {
     expansion: 'Classic',
     season: 1,
@@ -160,6 +171,7 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: 'Ruined',
     pullCount: 0,
     killDate: '2005-01-30',
+    bosses: bossesOf(['Onyxia'], 1),
   },
   {
     expansion: 'Classic',
@@ -168,6 +180,14 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: 'Ascent',
     pullCount: 0,
     killDate: '2005-04-25',
+    bosses: bossesOf(
+      [
+        'Lucifron', 'Magmadar', 'Gehennas', 'Garr', 'Baron Geddon',
+        'Shazzrah', 'Sulfuron Harbinger', 'Golemagg the Incinerator',
+        'Majordomo Executus', 'Ragnaros',
+      ],
+      10,
+    ),
   },
   {
     expansion: 'Classic',
@@ -176,6 +196,13 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: 'Drama',
     pullCount: 0,
     killDate: '2005-09-26',
+    bosses: bossesOf(
+      [
+        'Razorgore the Untamed', 'Vaelastrasz the Corrupt', 'Broodlord Lashlayer',
+        'Firemaw', 'Ebonroc', 'Flamegor', 'Chromaggus', 'Nefarian',
+      ],
+      8,
+    ),
   },
   {
     expansion: 'Classic',
@@ -184,6 +211,15 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: '—',
     pullCount: 0,
     killDate: '',
+    bosses: bossesOf(
+      [
+        'High Priestess Jeklik', 'High Priest Venoxis', 'High Priestess Mar\'li',
+        'Bloodlord Mandokir', 'Gahz\'rilla', 'Wushoolay', 'Renataki', 'Hazza\'rah',
+        'High Priest Thekal', 'High Priestess Arlokk', 'Jin\'do the Hexxer',
+        'Hakkar the Soulflayer',
+      ],
+      0,
+    ),
   },
   {
     expansion: 'Classic',
@@ -192,6 +228,13 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: '—',
     pullCount: 0,
     killDate: '',
+    bosses: bossesOf(
+      [
+        'Kurinnaxx', 'General Rajaxx', 'Moam', 'Buru the Gorger',
+        'Ayamiss the Hunter', 'Ossirian the Unscarred',
+      ],
+      0,
+    ),
   },
   {
     expansion: 'Classic',
@@ -200,6 +243,14 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: 'Nihilum',
     pullCount: 0,
     killDate: '2006-04-25',
+    bosses: bossesOf(
+      [
+        'The Prophet Skeram', 'Lord Kri', 'Princess Yauj', 'Vem',
+        'Battleguard Sartura', 'Fankriss the Unyielding', 'Viscidus',
+        'Princess Huhuran', 'Twin Emperors Vek\'lor and Veknilash', 'Ouro', 'C\'Thun',
+      ],
+      11,
+    ),
   },
   {
     expansion: 'Classic',
@@ -208,6 +259,119 @@ export const mockHistory: HistoryTier[] = [
     worldFirstGuild: 'Nihilum',
     pullCount: 0,
     killDate: '2006-09-07',
+    bosses: bossesOf(
+      [
+        'Anub\'Rekhan', 'Grand Widow Faerlina', 'Maexxna',
+        'Noth the Plaguebringer', 'Heigan the Unclean', 'Loatheb',
+        'Instructor Razuvious', 'Gothik the Harvester', 'The Four Horsemen',
+        'Patchwerk', 'Grobbulus', 'Gluth', 'Thaddius',
+        'Sapphiron', 'Kel\'Thuzad',
+      ],
+      15,
+    ),
+  },
+  // The Burning Crusade: World-First-Ergebnisse community-kuratiert nach Method
+  // ("The Burning Crusade Raid History", method.gg/raid-history/the-burning-crusade).
+  {
+    expansion: 'The Burning Crusade',
+    season: 1,
+    raidName: 'Karazhan',
+    worldFirstGuild: '—',
+    pullCount: 0,
+    killDate: '',
+    bosses: bossesOf(
+      [
+        'Attumen the Huntsman', 'Moroes', 'Maiden of Virtue', 'The Opera Event',
+        'The Curator', 'Terestian Illhoof', 'Shade of Aran', 'Netherspite',
+        'Chess Event', 'Prince Malchezaar', 'Nightbane',
+      ],
+      0,
+    ),
+  },
+  {
+    expansion: 'The Burning Crusade',
+    season: 1,
+    raidName: 'Gruul\'s Lair',
+    worldFirstGuild: 'Nihilum',
+    pullCount: 0,
+    killDate: '2007-02-03',
+    bosses: bossesOf(['High King Maulgar', 'Gruul the Dragonkiller'], 2),
+  },
+  {
+    expansion: 'The Burning Crusade',
+    season: 1,
+    raidName: 'Magtheridon\'s Lair',
+    worldFirstGuild: 'Nihilum',
+    pullCount: 0,
+    killDate: '2007-02-24',
+    bosses: bossesOf(['Magtheridon'], 1),
+  },
+  {
+    expansion: 'The Burning Crusade',
+    season: 1,
+    raidName: 'Serpentshrine Cavern',
+    worldFirstGuild: 'Nihilum',
+    pullCount: 0,
+    killDate: '2007-03-29',
+    bosses: bossesOf(
+      [
+        'Hydross the Unstable', 'The Lurker Below', 'Leotheras the Blind',
+        'Fathom-Lord Karathress', 'Morogrim Tidewalker', 'Lady Vashj',
+      ],
+      6,
+    ),
+  },
+  {
+    expansion: 'The Burning Crusade',
+    season: 1,
+    raidName: 'Tempest Keep: The Eye',
+    worldFirstGuild: 'Nihilum',
+    pullCount: 0,
+    killDate: '2007-05-25',
+    bosses: bossesOf(
+      ['Al\'ar', 'Void Reaver', 'High Astromancer Solarian', 'Kael\'thas Sunstrider'],
+      4,
+    ),
+  },
+  {
+    expansion: 'The Burning Crusade',
+    season: 1,
+    raidName: 'Black Temple',
+    worldFirstGuild: 'Nihilum',
+    pullCount: 0,
+    killDate: '2007-06-05',
+    bosses: bossesOf(
+      [
+        'High Warlord Naj\'entus', 'Supremus', 'Shade of Akama', 'Teron Gorefiend',
+        'Gurtogg Bloodboil', 'Reliquary of Souls', 'Mother Shahraz',
+        'The Illidari Council', 'Illidan Stormrage',
+      ],
+      9,
+    ),
+  },
+  {
+    expansion: 'The Burning Crusade',
+    season: 1,
+    raidName: 'Mount Hyjal',
+    worldFirstGuild: 'Nihilum',
+    pullCount: 0,
+    killDate: '2007-06-09',
+    bosses: bossesOf(
+      ['Rage Winterchill', 'Anetheron', 'Kaz\'rogal', 'Azgalor', 'Archimonde'],
+      5,
+    ),
+  },
+  {
+    expansion: 'The Burning Crusade',
+    season: 1,
+    raidName: 'Sunwell Plateau',
+    worldFirstGuild: 'SK Gaming',
+    pullCount: 0,
+    killDate: '2008-05-25',
+    bosses: bossesOf(
+      ['Kalecgos', 'Brutallus', 'Felmyst', 'Eredar Twins', 'M\'uru', 'Kil\'jaeden'],
+      6,
+    ),
   },
 ];
 

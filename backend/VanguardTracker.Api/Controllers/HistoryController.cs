@@ -35,7 +35,8 @@ public class HistoryController(VanguardDbContext db) : ControllerBase
         var tiers = raids
             .Select(raid =>
             {
-                var finalBoss = raid.Bosses.OrderByDescending(b => b.Order).FirstOrDefault();
+                var orderedBosses = raid.Bosses.OrderBy(b => b.Order).ToList();
+                var finalBoss = orderedBosses.LastOrDefault();
                 var worldFirstKill = finalBoss?.Kills
                     .OrderBy(k => k.Timestamp)
                     .FirstOrDefault();
@@ -48,7 +49,10 @@ public class HistoryController(VanguardDbContext db) : ControllerBase
                     worldFirstKill?.PullCount ?? 0,
                     worldFirstKill is not null
                         ? DateOnly.FromDateTime(worldFirstKill.Timestamp.UtcDateTime)
-                        : default
+                        : default,
+                    orderedBosses
+                        .Select(b => new HistoryBossDto(b.Name, b.Order, b.Kills.Count > 0))
+                        .ToList()
                 );
             })
             .ToList();

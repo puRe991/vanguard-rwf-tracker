@@ -63,6 +63,12 @@ export interface Kill {
   status: KillStatus;
 }
 
+export interface HistoryBoss {
+  name: string;
+  order: number;
+  killed: boolean;
+}
+
 export interface HistoryTier {
   expansion: string;
   season: number;
@@ -70,6 +76,7 @@ export interface HistoryTier {
   worldFirstGuild: string;
   pullCount: number;
   killDate: string;
+  bosses: HistoryBoss[];
 }
 
 export interface LiveTickerEvent {

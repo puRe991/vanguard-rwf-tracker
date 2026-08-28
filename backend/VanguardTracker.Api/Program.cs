@@ -76,6 +76,7 @@ if (app.Environment.IsDevelopment())
     await db.Database.MigrateAsync();
     await DbSeeder.SeedAsync(db);
     await VanillaHistorySeeder.SeedAsync(db);
+    await BurningCrusadeHistorySeeder.SeedAsync(db);
 }
 
 app.UseHttpsRedirection();
