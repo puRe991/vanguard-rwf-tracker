@@ -9,6 +9,15 @@ Zeiträume ohne verlässliche API-Abdeckung.
 - `backend/` — ASP.NET Core 8 Web-API (C#, EF Core, PostgreSQL, SignalR)
 - `frontend/` — React (Vite + TypeScript), TanStack Query, Tailwind CSS
 
+## Schnellstart unter Windows
+
+`start-vanguard.bat` im Repo-Root prüft, ob .NET 8 SDK, Node.js/npm und
+PostgreSQL vorhanden/erreichbar sind (legt Datenbank + Benutzer bei Bedarf
+automatisch an, sofern `psql` mit lokalem Superuser-Zugriff verfügbar ist),
+installiert fehlende Frontend-Pakete, legt `frontend/.env` an falls nötig
+und startet Backend sowie Frontend anschließend jeweils in einem eigenen
+Fenster — Doppelklick genügt.
+
 ## Backend starten
 
 Voraussetzung: .NET 8 SDK, PostgreSQL.
