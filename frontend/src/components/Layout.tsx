@@ -1,4 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { LiveStatusBadge } from './LiveStatusBadge';
+import { KillToastStack } from './KillToastStack';
 
 const links = [
   { to: '/', label: 'Live-Race', end: true },
@@ -11,8 +13,11 @@ export function Layout() {
     <div className="min-h-screen bg-obsidian text-text">
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="font-headline text-2xl tracking-wide text-text">
-            VAN<span className="text-turquoise">GUARD</span>
+          <div className="flex items-center gap-4">
+            <div className="font-headline text-2xl tracking-wide text-text">
+              VAN<span className="text-turquoise">GUARD</span>
+            </div>
+            <LiveStatusBadge />
           </div>
           <nav className="flex gap-6">
             {links.map((link) => (
@@ -36,6 +41,7 @@ export function Layout() {
       <main className="mx-auto max-w-6xl px-6 py-8">
         <Outlet />
       </main>
+      <KillToastStack />
     </div>
   );
 }

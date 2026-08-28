@@ -68,6 +68,18 @@ Der Job wertet nur Reports aus, deren letzter Fight länger als
 `WarcraftLogs:ReportFinalizationGraceMinutes` zurückliegt, um nicht auf
 unvollständig hochgeladene Live-Reports hereinzufallen.
 
+**Frontend-Live-Anbindung** (nicht nur im Dashboard): Eine geteilte
+SignalR-Verbindung (`lib/raceHubConnection.ts`) treibt drei unabhängige
+Verbraucher — den Ticker im Dashboard, app-weite Kill-Toasts
+(`hooks/useKillToasts.ts` + `components/KillToastStack.tsx`, gemountet in
+`Layout.tsx`) und die Live-Invalidierung des gerade geöffneten Gilden-Profils
+(`useGuildProfile` in `hooks/useGuild.ts` — reagiert nur auf `TickerEvent`s
+der eigenen Gilde). `hooks/useHubConnectionStatus.ts` zeigt den
+Verbindungsstatus als Badge im Header (Live/Verbindung wird aufgebaut/
+Getrennt). Im Mock-Modus (`VITE_USE_MOCKS=true`) bleiben Toasts und
+Live-Invalidierung bewusst inaktiv — ohne echten Hub gäbe es sonst
+vorgetäuschte Live-Ereignisse; der Badge zeigt dort "Demo-Daten".
+
 ## Historie-Import (Phase 3)
 
 Für die Vanilla-Ära (Classic, Season 1) gibt es keine API-Abdeckung, daher ist
