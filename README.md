@@ -105,18 +105,46 @@ Crusade fort, Quelle
 durch ein "World First Legit"-Zitat von Method — als Ergebnis bleibt aber
 durchgehend Nihilum am 29.03.2007 stehen, ohne abweichendes Datum oder Gilde.
 
+`Data/WrathHistorySeeder.cs` führt die Kuration für Wrath of the Lich King fort,
+Quelle [method.gg/raid-history/wrath-of-the-lich-king](https://www.method.gg/raid-history/wrath-of-the-lich-king):
+
+| Raid | Finaler Boss | World-First-Gilde | Kill-Datum |
+|---|---|---|---|
+| Vault of Archavon | — | — (nicht belegt) | — |
+| Naxxramas | Kel'Thuzad | Ensidia (EU) | 15.11.2008 |
+| The Obsidian Sanctum | Sartharion | Ensidia (EU) | 21.11.2008 |
+| The Eye of Eternity | Malygos | Ensidia (EU) | 15.11.2008 |
+| Ulduar | Yogg-Saron | Stars (TW) | 07.07.2009 |
+| Trial of the Grand Crusader | Anub'arak | Paragon (EU) | 07.09.2009 |
+| Icecrown Citadel | The Lich King | Paragon (EU) | 26.03.2010 |
+| Ruby Sanctum | Halion | Premonition (US) | 30.06.2010 |
+
+`Data/CataclysmHistorySeeder.cs` schließt die manuell kuratierte Ära ab (letzte
+Season ohne verlässliche Warcraft-Logs-Abdeckung), Quelle
+[method.gg/raid-history/cataclysm](https://www.method.gg/raid-history/cataclysm):
+
+| Raid | Finaler Boss | World-First-Gilde | Kill-Datum |
+|---|---|---|---|
+| Baradin Hold | — | — (nicht belegt) | — |
+| Blackwing Descent | Nefarian | Paragon (EU) | 09.01.2011 |
+| The Bastion of Twilight | Sinestra | Paragon (EU) | 20.01.2011 |
+| Throne of the Four Winds | Al'Akir | Paragon (EU) | 24.01.2011 |
+| Firelands | Ragnaros | Paragon (EU) | 19.07.2011 |
+| Dragon Soul | Madness of Deathwing | KIN Raiders (KR) | 20.12.2011 |
+
 Jeder importierte Kill trägt die Quelle als `SourceUrl` (Beleg-Pflicht laut
 Datenmodell). Raids ohne belegte World-First-Angabe (Zul'Gurub, Ruins of
-Ahn'Qiraj, Karazhan) werden bewusst ohne Kill-Datensatz angelegt, statt Daten
-zu erfinden — die History-Seite verlinkt dafür direkt auf den
-Community-Beitrags-Workflow (`/submit`) und zeigt trotzdem die vollständige,
-dokumentierte Boss-Liste jedes Raids an. Pull-Zahlen sind für diese Ären
-generell nicht überliefert und stehen daher auf `0`; die History-UI blendet
-`0 Pulls` aus statt sie als Fakt darzustellen.
+Ahn'Qiraj, Karazhan, Vault of Archavon, Baradin Hold) werden bewusst ohne
+Kill-Datensatz angelegt, statt Daten zu erfinden — die History-Seite verlinkt
+dafür direkt auf den Community-Beitrags-Workflow (`/submit`) und zeigt
+trotzdem die vollständige, dokumentierte Boss-Liste jedes Raids an. Pull-Zahlen
+sind für diese Ären generell nicht überliefert und stehen daher auf `0`; die
+History-UI blendet `0 Pulls` aus statt sie als Fakt darzustellen.
 
-Ab Cataclysm (verlässliche Warcraft-Logs-Abdeckung) soll ein späterer Import
-stattdessen `WarcraftLogsClient` wiederverwenden, um Guild-Reports vergangener
-Tiers systematisch statt Boss-für-Boss abzufragen.
+Ab Dragon Soul/Cataclysm endet die manuell kuratierte Historie — für spätere
+Addons (verlässliche Warcraft-Logs-Abdeckung) soll ein Import stattdessen
+`WarcraftLogsClient` wiederverwenden, um Guild-Reports vergangener Tiers
+systematisch statt Boss-für-Boss abzufragen.
 
 ## Design-System
 

@@ -77,6 +77,8 @@ if (app.Environment.IsDevelopment())
     await DbSeeder.SeedAsync(db);
     await VanillaHistorySeeder.SeedAsync(db);
     await BurningCrusadeHistorySeeder.SeedAsync(db);
+    await WrathHistorySeeder.SeedAsync(db);
+    await CataclysmHistorySeeder.SeedAsync(db);
 }
 
 app.UseHttpsRedirection();
