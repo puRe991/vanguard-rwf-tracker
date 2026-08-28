@@ -1,0 +1,76 @@
+name: Windows Build
+
+# Zwei Zwecke:
+# 1. verify: Backend (.NET) + Frontend (Vite) auf einem echten Windows-Runner
+#    bauen, um sicherzustellen, dass es dort funktioniert (nicht nur auf Linux/CI).
+# 2. publish-win-x86: eigenständige 32-bit-Windows-.exe des Backends als
+#    Download-Artefakt, für lokales Hosting ohne installierte .NET-Runtime.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  NODE_VERSION: '20'
+  BACKEND_PROJECT: backend/VanguardTracker.Api/VanguardTracker.Api.csproj
+
+jobs:
+  verify:
+    name: Verify build (windows-latest)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: .NET SDK einrichten
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Backend restore + build
+        run: |
+          dotnet restore ${{ env.BACKEND_PROJECT }}
+          dotnet build ${{ env.BACKEND_PROJECT }} --configuration Release --no-restore
+
+      - name: Node einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Frontend install + build
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+  publish-win-x86:
+    name: Publish win-x86 self-contained
+    runs-on: windows-latest
+    needs: verify
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: .NET SDK einrichten
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: dotnet publish (win-x86, self-contained, single file)
+        run: >
+          dotnet publish ${{ env.BACKEND_PROJECT }}
+          --configuration Release
+          --runtime win-x86
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -o publish/win-x86
+
+      - name: Artefakt hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: vanguard-api-win-x86
+          path: publish/win-x86
+          retention-days: 14

@@ -257,6 +257,22 @@ Siehe `frontend/src/index.css` (`@theme`-Block) für die Farb- und
 Typografie-Tokens des "Vanguard"-Designs (Obsidian/Türkis/Gold/Ember,
 Cinzel/Barlow Condensed/Inter/JetBrains Mono).
 
+## CI: Windows-Build
+
+`.github/workflows/windows-build.yml` läuft auf `windows-latest` bei jedem
+Push auf `main`, jedem PR und manuell (`workflow_dispatch`):
+
+- **verify** — baut Backend (.NET) und Frontend (Vite) auf einem echten
+  Windows-Runner, rein zur Verifikation (kein Artefakt).
+- **publish-win-x86** — `dotnet publish` mit `--runtime win-x86
+  --self-contained true -p:PublishSingleFile=true`: eine
+  eigenständige 32-bit-`.exe` des Backends, die ohne installierte
+  .NET-Runtime läuft. Landet als Download-Artefakt (`vanguard-api-win-x86`,
+  14 Tage Aufbewahrung) am Workflow-Run. PostgreSQL bringt das Artefakt nicht
+  mit — die Ziel-Maschine braucht weiterhin eine erreichbare Postgres-Instanz
+  und eine passende `appsettings.json`/Umgebungsvariable für den
+  Connection-String.
+
 ## Version & Splash Screen
 
 Aktuelle Version: **0.1.0** — einzige Quelle ist `frontend/package.json`
