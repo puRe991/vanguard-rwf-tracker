@@ -53,7 +53,8 @@ public record GuildHistoryKillDto(
     string BossName,
     DateTimeOffset KillDate,
     int PullCount,
-    string? SourceUrl // Beleg-/Video-Link des Kills
+    string? SourceUrl, // Beleg-/Video-Link des Kills
+    List<string>? Roster // nur gesetzt, wenn tatsächlich bekannt
 );
 
 public record GuildProfileDto(

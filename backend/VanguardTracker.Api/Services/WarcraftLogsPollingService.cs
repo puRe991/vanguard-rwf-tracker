@@ -172,6 +172,16 @@ public class WarcraftLogsPollingService(
                 var killTimestamp = DateTimeOffset.FromUnixTimeMilliseconds(
                     (long)(fights.StartTime + fight.EndTime));
 
+                List<string>? roster = null;
+                try
+                {
+                    roster = await wcl.GetFightRosterAsync(report.Code, fight.Id, ct);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogWarning(ex, "Roster für Report {Report} Fight {Fight} konnte nicht geladen werden", report.Code, fight.Id);
+                }
+
                 db.Kills.Add(new Kill
                 {
                     Id = Guid.NewGuid(),
@@ -181,6 +191,7 @@ public class WarcraftLogsPollingService(
                     PullCount = progress.PullCount,
                     SourceUrl = $"https://www.warcraftlogs.com/reports/{report.Code}#fight={fight.Id}",
                     Status = KillStatus.Confirmed,
+                    Roster = roster,
                 });
 
                 progress.Killed = true;

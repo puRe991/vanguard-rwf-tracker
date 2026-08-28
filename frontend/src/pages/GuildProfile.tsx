@@ -56,6 +56,37 @@ function LinkRow({ links }: { links: { twitch?: string; youTube?: string; twitte
   );
 }
 
+function RosterToggle({ kill }: { kill: GuildHistoryKill }) {
+  const [open, setOpen] = useState(false);
+  if (!kill.roster || kill.roster.length === 0) return null;
+
+  return (
+    <div className="mt-1">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="eyebrow flex items-center gap-1 text-[11px] text-text-muted hover:text-turquoise"
+      >
+        Roster ({kill.roster.length})
+        <span className={`transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden>
+          ▾
+        </span>
+      </button>
+      {open && (
+        <ul className="mt-2 flex flex-wrap gap-2">
+          {kill.roster.map((name) => (
+            <li
+              key={name}
+              className="rounded-full border border-border bg-obsidian px-2 py-0.5 font-mono-num text-[11px] text-text"
+            >
+              {name}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 function HistoryList({ history }: { history: GuildHistoryKill[] }) {
   const [openExpansion, setOpenExpansion] = useState<string | null>(null);
 
@@ -93,29 +124,29 @@ function HistoryList({ history }: { history: GuildHistoryKill[] }) {
             {open && (
               <ul className="flex flex-col gap-2 border-t border-border p-4">
                 {kills.map((kill) => (
-                  <li
-                    key={`${kill.raidName}-${kill.bossName}`}
-                    className="flex items-center justify-between gap-3 text-sm"
-                  >
-                    <div>
-                      <span className="text-text">{kill.bossName}</span>
-                      <span className="text-text-muted"> — {kill.raidName}</span>
+                  <li key={`${kill.raidName}-${kill.bossName}`} className="text-sm">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <span className="text-text">{kill.bossName}</span>
+                        <span className="text-text-muted"> — {kill.raidName}</span>
+                      </div>
+                      <div className="flex items-center gap-3 whitespace-nowrap">
+                        <span className="font-mono-num text-xs text-text-muted">
+                          {new Date(kill.killDate).toLocaleDateString('de-DE')}
+                        </span>
+                        {kill.sourceUrl && (
+                          <a
+                            href={kill.sourceUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-xs text-gold-light hover:underline"
+                          >
+                            Beleg/Video
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3 whitespace-nowrap">
-                      <span className="font-mono-num text-xs text-text-muted">
-                        {new Date(kill.killDate).toLocaleDateString('de-DE')}
-                      </span>
-                      {kill.sourceUrl && (
-                        <a
-                          href={kill.sourceUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-xs text-gold-light hover:underline"
-                        >
-                          Beleg/Video
-                        </a>
-                      )}
-                    </div>
+                    <RosterToggle kill={kill} />
                   </li>
                 ))}
               </ul>

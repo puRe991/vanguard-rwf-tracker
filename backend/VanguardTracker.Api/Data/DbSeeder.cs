@@ -64,6 +64,15 @@ public static class DbSeeder
         db.Guilds.AddRange(guilds);
 
         // Liquid hat die ersten 6 Bosse erledigt.
+        // Roster ist frei erfundene Demo-Besetzung (keine echten Personen) — zeigt im
+        // Live-Demo-Modus, wie das Roster-Feature aussieht, wenn es echte Daten hätte.
+        var demoRoster = new List<string>
+        {
+            "Naowh", "Maximum", "Fragnance", "Rhyolith", "Cayna", "Solanaceae",
+            "Vaporlock", "Threep", "Xephyris", "Muffinus", "Kelaan", "Grennbean",
+            "Vailea", "Anxxa", "Draikin", "Mercutiø", "Nightslayer", "Ellyra",
+            "Fenrys", "Corrode",
+        };
         var now = DateTimeOffset.UtcNow;
         for (var i = 0; i < 6; i++)
         {
@@ -75,6 +84,7 @@ public static class DbSeeder
                 Timestamp = now.AddHours(-(6 - i) * 3),
                 PullCount = 40 + i * 15,
                 Status = KillStatus.Confirmed,
+                Roster = demoRoster,
             });
         }
 

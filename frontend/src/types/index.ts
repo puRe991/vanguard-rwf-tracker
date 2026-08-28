@@ -115,6 +115,8 @@ export interface GuildHistoryKill {
   killDate: string;
   pullCount: number;
   sourceUrl?: string;
+  /** Roster des Kills — nur gesetzt, wenn tatsächlich bekannt (z. B. Warcraft-Logs-Report). */
+  roster?: string[];
 }
 
 export interface GuildProfile {

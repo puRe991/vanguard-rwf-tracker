@@ -87,7 +87,8 @@ public class GuildsController(VanguardDbContext db) : ControllerBase
                 k.Boss?.Name ?? "Unbekannt",
                 k.Timestamp,
                 k.PullCount,
-                k.SourceUrl
+                k.SourceUrl,
+                k.Roster
             ))
             .ToList();
 

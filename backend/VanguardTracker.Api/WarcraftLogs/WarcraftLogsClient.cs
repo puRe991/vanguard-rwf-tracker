@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using Microsoft.Extensions.Options;
 
 namespace VanguardTracker.Api.WarcraftLogs;
@@ -74,6 +75,66 @@ public class WarcraftLogsClient(
 
         var result = await ExecuteAsync<WclReportFightsData>(ReportFightsQuery, variables, ct);
         return result?.ReportData?.Report;
+    }
+
+    private const string PlayerDetailsQuery = """
+        query FightPlayerDetails($code: String!, $fightIDs: [Int]) {
+          reportData {
+            report(code: $code) {
+              playerDetails(fightIDs: $fightIDs)
+            }
+          }
+        }
+        """;
+
+    /// <summary>
+    /// Liest die Spielernamen (Tanks/Healers/DPS) eines einzelnen Fights aus dem
+    /// "playerDetails"-Feld der WCL-API. Gibt null zurück, wenn das Report keine
+    /// (mehr) auswertbaren Details für diesen Fight liefert.
+    /// </summary>
+    public async Task<List<string>?> GetFightRosterAsync(string reportCode, int fightId, CancellationToken ct)
+    {
+        var variables = new Dictionary<string, object?>
+        {
+            ["code"] = reportCode,
+            ["fightIDs"] = new[] { fightId },
+        };
+
+        var result = await ExecuteAsync<WclReportPlayerDetailsData>(PlayerDetailsQuery, variables, ct);
+        var root = result?.ReportData?.Report?.PlayerDetails;
+        if (root is not { ValueKind: JsonValueKind.Object } detailsRoot)
+        {
+            return null;
+        }
+
+        if (!detailsRoot.TryGetProperty("data", out var data) ||
+            !data.TryGetProperty("playerDetails", out var playerDetails))
+        {
+            return null;
+        }
+
+        var names = new List<string>();
+        foreach (var group in new[] { "tanks", "healers", "dps" })
+        {
+            if (!playerDetails.TryGetProperty(group, out var players) || players.ValueKind != JsonValueKind.Array)
+            {
+                continue;
+            }
+
+            foreach (var player in players.EnumerateArray())
+            {
+                if (player.TryGetProperty("name", out var nameProp) && nameProp.ValueKind == JsonValueKind.String)
+                {
+                    var name = nameProp.GetString();
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        names.Add(name);
+                    }
+                }
+            }
+        }
+
+        return names.Count > 0 ? names : null;
     }
 
     private async Task<T?> ExecuteAsync<T>(string query, Dictionary<string, object?> variables, CancellationToken ct)

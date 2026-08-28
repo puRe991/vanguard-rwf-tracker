@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace VanguardTracker.Api.WarcraftLogs;
@@ -44,4 +45,18 @@ public record WclFight(
     [property: JsonPropertyName("startTime")] double StartTime,
     [property: JsonPropertyName("endTime")] double EndTime,
     [property: JsonPropertyName("difficulty")] int? Difficulty
+);
+
+public record WclReportPlayerDetailsData(
+    [property: JsonPropertyName("reportData")] WclReportPlayerDetailsWrapper? ReportData
+);
+
+public record WclReportPlayerDetailsWrapper(
+    [property: JsonPropertyName("report")] WclReportPlayerDetails? Report
+);
+
+// "playerDetails" ist in der WCL-v2-API ein rohes JSON-Scalar-Feld (kein
+// typisiertes GraphQL-Objekt), daher hier als JsonElement roh eingelesen.
+public record WclReportPlayerDetails(
+    [property: JsonPropertyName("playerDetails")] JsonElement PlayerDetails
 );
