@@ -1,0 +1,46 @@
+@import 'tailwindcss';
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@theme {
+  --color-obsidian: #0a0c10;
+  --color-card: #12161c;
+  --color-border: #232a34;
+  --color-text: #e6e3da;
+  --color-text-muted: #8b93a1;
+
+  --color-turquoise: #3fc7c1;
+  --color-gold: #d9a441;
+  --color-gold-light: #f0c674;
+  --color-ember: #c1432b;
+  --color-ember-light: #e8683f;
+
+  --font-eyebrow: 'Cinzel', serif;
+  --font-headline: 'Barlow Condensed', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--color-obsidian);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.eyebrow {
+  font-family: var(--font-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.font-mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

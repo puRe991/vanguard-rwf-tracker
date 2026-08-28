@@ -1,0 +1,14 @@
+## .NET
+backend/**/bin/
+backend/**/obj/
+backend/**/appsettings.*.local.json
+
+## Node / Vite
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+## OS / editors
+.DS_Store
+*.log
