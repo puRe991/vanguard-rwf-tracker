@@ -68,6 +68,35 @@ Der Job wertet nur Reports aus, deren letzter Fight länger als
 `WarcraftLogs:ReportFinalizationGraceMinutes` zurückliegt, um nicht auf
 unvollständig hochgeladene Live-Reports hereinzufallen.
 
+## Historie-Import (Phase 3)
+
+Für die Vanilla-Ära (Classic, Season 1) gibt es keine API-Abdeckung, daher ist
+`Data/VanillaHistorySeeder.cs` eine manuell kuratierte Übernahme aus
+["Vanilla Raid History of World Firsts in World of Warcraft"](https://www.method.gg/raid-history)
+(Method), automatisch eingespielt im Development-Modus zusammen mit
+`DbSeeder`. Übernommen wird nur, was die Quelle tatsächlich belegt:
+
+| Raid | Finaler Boss | World-First-Gilde | Kill-Datum |
+|---|---|---|---|
+| Onyxia's Lair | Onyxia | Ruined (US) | 30.01.2005 |
+| Molten Core | Ragnaros | Ascent (US) | 25.04.2005 |
+| Blackwing Lair | Nefarian | Drama (US) | 26.09.2005 |
+| Zul'Gurub | — | — (nicht belegt) | — |
+| Ruins of Ahn'Qiraj | — | — (nicht belegt) | — |
+| Temple of Ahn'Qiraj | C'Thun | Nihilum (EU) | 25.04.2006 |
+| Naxxramas | Kel'Thuzad | Nihilum (EU) | 07.09.2006 |
+
+Jeder importierte Kill trägt die Quelle als `SourceUrl` (Beleg-Pflicht laut
+Datenmodell). Zul'Gurub und Ruins of Ahn'Qiraj werden bewusst ohne Kill-Datensatz
+angelegt, statt Daten zu erfinden — die History-Seite verlinkt dafür direkt auf
+den Community-Beitrags-Workflow (`/submit`). Pull-Zahlen sind für die
+Vanilla-Ära generell nicht überliefert und stehen daher auf `0`; die
+History-UI blendet `0 Pulls` aus statt sie als Fakt darzustellen.
+
+Ab Cataclysm (verlässliche Warcraft-Logs-Abdeckung) soll ein späterer Import
+stattdessen `WarcraftLogsClient` wiederverwenden, um Guild-Reports vergangener
+Tiers systematisch statt Boss-für-Boss abzufragen.
+
 ## Design-System
 
 Siehe `frontend/src/index.css` (`@theme`-Block) für die Farb- und
@@ -78,11 +107,12 @@ Cinzel/Barlow Condensed/Inter/JetBrains Mono).
 
 1. **MVP** (erledigt): EF-Core-Schema + manuelles Seeding, React-Dashboard
    gegen Mock- bzw. geseedete Daten, kein Live-Polling.
-2. **Live-Tracking** (aktuell): SignalR-Hub + Warcraft-Logs-Polling für
+2. **Live-Tracking** (erledigt): SignalR-Hub + Warcraft-Logs-Polling für
    automatische Kill-/Pull-Erkennung der aktuellen Mythic-Race, siehe
    „Warcraft-Logs-Live-Tracking" unten.
-3. Historie-Import für vergangene Seasons (ab Cataclysm via API, davor
-   manuell/kuratiert).
+3. **Historie-Import** (aktuell): Vanilla-Ära manuell kuratiert
+   (`Data/VanillaHistorySeeder.cs`), ab Cataclysm später via Warcraft-Logs-API.
+   Siehe „Historie-Import" unten.
 4. Community-Beitrags-Workflow + Moderation (JWT-Auth ist im Backend
    bereits verdrahtet, `POST /api/kills/submit` erfordert `[Authorize]`).
 5. Benachrichtigungen/Discord-Integration.

@@ -151,6 +151,64 @@ export const mockHistory: HistoryTier[] = [
     pullCount: 209,
     killDate: '2010-05-06',
   },
+  // Vanilla: keine API-Abdeckung, community-kuratiert nach Method
+  // ("Vanilla Raid History of World Firsts", method.gg/raid-history).
+  {
+    expansion: 'Classic',
+    season: 1,
+    raidName: 'Onyxia’s Lair',
+    worldFirstGuild: 'Ruined',
+    pullCount: 0,
+    killDate: '2005-01-30',
+  },
+  {
+    expansion: 'Classic',
+    season: 1,
+    raidName: 'Molten Core',
+    worldFirstGuild: 'Ascent',
+    pullCount: 0,
+    killDate: '2005-04-25',
+  },
+  {
+    expansion: 'Classic',
+    season: 1,
+    raidName: 'Blackwing Lair',
+    worldFirstGuild: 'Drama',
+    pullCount: 0,
+    killDate: '2005-09-26',
+  },
+  {
+    expansion: 'Classic',
+    season: 1,
+    raidName: 'Zul’Gurub',
+    worldFirstGuild: '—',
+    pullCount: 0,
+    killDate: '',
+  },
+  {
+    expansion: 'Classic',
+    season: 1,
+    raidName: 'Ruins of Ahn’Qiraj',
+    worldFirstGuild: '—',
+    pullCount: 0,
+    killDate: '',
+  },
+  {
+    expansion: 'Classic',
+    season: 1,
+    raidName: 'Temple of Ahn’Qiraj',
+    worldFirstGuild: 'Nihilum',
+    pullCount: 0,
+    killDate: '2006-04-25',
+  },
+  {
+    expansion: 'Classic',
+    season: 1,
+    raidName: 'Naxxramas',
+    worldFirstGuild: 'Nihilum',
+    pullCount: 0,
+    killDate: '2006-09-07',
+  },
 ];
 
 export const mockPullSeries: BossPullSeries[] = [

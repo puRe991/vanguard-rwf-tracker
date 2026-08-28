@@ -75,6 +75,7 @@ if (app.Environment.IsDevelopment())
     var db = scope.ServiceProvider.GetRequiredService<VanguardDbContext>();
     await db.Database.MigrateAsync();
     await DbSeeder.SeedAsync(db);
+    await VanillaHistorySeeder.SeedAsync(db);
 }
 
 app.UseHttpsRedirection();

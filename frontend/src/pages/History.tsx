@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useHistory } from '../hooks/useHistory';
 
 export function History() {
@@ -11,6 +12,7 @@ export function History() {
     'Shadowlands',
     'Cataclysm',
     'Wrath of the Lich King',
+    'Classic',
   ];
 
   return (
@@ -55,10 +57,19 @@ export function History() {
               <div className="font-headline text-xl">{tier.raidName}</div>
             </div>
             <div className="text-right">
-              <div className="text-gold-light">{tier.worldFirstGuild}</div>
-              <div className="font-mono-num text-xs text-text-muted">
-                {tier.pullCount} Pulls · {new Date(tier.killDate).toLocaleDateString('de-DE')}
-              </div>
+              {tier.worldFirstGuild === '—' ? (
+                <Link to="/submit" className="text-sm text-ember-light hover:underline">
+                  Noch nicht dokumentiert — beitragen
+                </Link>
+              ) : (
+                <>
+                  <div className="text-gold-light">{tier.worldFirstGuild}</div>
+                  <div className="font-mono-num text-xs text-text-muted">
+                    {tier.pullCount > 0 ? `${tier.pullCount} Pulls · ` : ''}
+                    {new Date(tier.killDate).toLocaleDateString('de-DE')}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         ))}
