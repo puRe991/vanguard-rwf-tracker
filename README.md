@@ -95,11 +95,15 @@ Crusade fort, Quelle
 | Karazhan | — | — (nicht belegt) | — |
 | Gruul's Lair | Gruul the Dragonkiller | Nihilum (EU) | 03.02.2007 |
 | Magtheridon's Lair | Magtheridon | Nihilum (EU) | 24.02.2007 |
-| Serpentshrine Cavern | Lady Vashj | Nihilum (EU) | 29.03.2007 |
+| Serpentshrine Cavern¹ | Lady Vashj | Nihilum (EU) | 29.03.2007 |
 | Tempest Keep: The Eye | Kael'thas Sunstrider | Nihilum (EU) | 25.05.2007 |
 | Black Temple | Illidan Stormrage | Nihilum (EU) | 05.06.2007 |
 | Mount Hyjal | Archimonde | Nihilum (EU) | 09.06.2007 |
 | Sunwell Plateau | Kil'jaeden | SK Gaming (EU) | 25.05.2008 |
+
+¹ Die Quelle erwähnt eine zunächst "gebuggte" Kill-Meldung von Nihilum, korrigiert
+durch ein "World First Legit"-Zitat von Method — als Ergebnis bleibt aber
+durchgehend Nihilum am 29.03.2007 stehen, ohne abweichendes Datum oder Gilde.
 
 Jeder importierte Kill trägt die Quelle als `SourceUrl` (Beleg-Pflicht laut
 Datenmodell). Raids ohne belegte World-First-Angabe (Zul'Gurub, Ruins of

@@ -74,6 +74,9 @@ public static class BurningCrusadeHistorySeeder
             worldFirstGuild: nihilum,
             killAt: new DateTimeOffset(2007, 2, 24, 0, 0, 0, TimeSpan.Zero));
 
+        // Quelle vermerkt eine zunächst "gebuggte" Nihilum-Kill-Meldung, korrigiert um
+        // ein "World First Legit"-Zitat von Method — als offizielles Ergebnis bleibt
+        // aber durchgehend Nihilum am 29.03.2007 stehen, kein abweichendes Datum/Gilde.
         AddRaidWithConfirmedKill(db, season.Id,
             raidName: "Serpentshrine Cavern",
             openAt: new DateTimeOffset(2007, 1, 16, 0, 0, 0, TimeSpan.Zero),
