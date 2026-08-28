@@ -73,4 +73,45 @@ public class RacesController(VanguardDbContext db) : ControllerBase
 
         return Ok(entries);
     }
+
+    /// <summary>
+    /// Jüngste Kills der aktuellen Race als Ticker-Feed (initialer Fetch beim
+    /// Seitenaufruf; danach übernimmt SignalR via RaceHub/TickerEvent das Live-Update).
+    /// Pull-Milestones werden nicht persistiert und tauchen daher nur live auf, nicht
+    /// rückwirkend in diesem Feed.
+    /// </summary>
+    [HttpGet("current/ticker")]
+    public async Task<ActionResult<List<LiveTickerEventDto>>> GetCurrentTicker(CancellationToken ct)
+    {
+        var raid = await db.Raids
+            .Include(r => r.Bosses)
+            .Where(r => r.MythicOpenAt != null && r.MythicOpenAt <= DateTimeOffset.UtcNow)
+            .OrderByDescending(r => r.MythicOpenAt)
+            .FirstOrDefaultAsync(ct);
+
+        if (raid is null)
+        {
+            return Ok(new List<LiveTickerEventDto>());
+        }
+
+        var bossIds = raid.Bosses.Select(b => b.Id).ToList();
+
+        var events = await db.Kills
+            .Where(k => bossIds.Contains(k.BossId))
+            .Include(k => k.Guild)
+            .Include(k => k.Boss)
+            .OrderByDescending(k => k.Timestamp)
+            .Take(20)
+            .Select(k => new LiveTickerEventDto(
+                k.Id,
+                k.Guild!.Name,
+                k.Boss!.Name,
+                k.Guild!.Name + " besiegt " + k.Boss!.Name,
+                k.Timestamp,
+                "kill"
+            ))
+            .ToListAsync(ct);
+
+        return Ok(events);
+    }
 }

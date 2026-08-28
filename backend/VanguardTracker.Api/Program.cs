@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -97,5 +98,21 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<RaceHub>("/hubs/race");
+
+if (app.Environment.IsDevelopment())
+{
+    // TEMP (manueller End-to-End-Test der Live-Kill-Updates ohne echte WCL-Credentials):
+    // simuliert exakt das Event, das WarcraftLogsPollingService im Live-Betrieb pusht.
+    app.MapPost("/api/dev/simulate-kill", async (IHubContext<RaceHub> hub) =>
+    {
+        var evt = new VanguardTracker.Api.DTOs.LiveTickerEventDto(
+            Guid.NewGuid(), "Liquid", "Voidbound Herald",
+            "Liquid besiegt Voidbound Herald — Pull #142",
+            DateTimeOffset.UtcNow, "kill");
+        await hub.Clients.All.SendAsync("TickerEvent", evt);
+        await hub.Clients.All.SendAsync("RaceUpdated");
+        return Results.Ok(evt);
+    });
+}
 
 app.Run();

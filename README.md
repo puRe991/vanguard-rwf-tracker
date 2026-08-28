@@ -17,13 +17,22 @@ Voraussetzung: .NET 8 SDK, PostgreSQL.
 cd backend/VanguardTracker.Api
 cp appsettings.json appsettings.Development.local.json  # Connection-String/JWT-Key anpassen
 dotnet restore
-dotnet ef migrations add InitialCreate   # einmalig, benötigt dotnet-ef (dotnet tool install --global dotnet-ef)
 dotnet run
 ```
 
+Die `InitialCreate`-Migration liegt bereits unter `Migrations/` im Repo — im
+Development-Modus wendet `Program.cs` sie beim Start automatisch an
+(`db.Database.MigrateAsync()`) und lässt danach alle Seeder durchlaufen
+(aktuelle Demo-Season + komplette Historie Classic→Midnight). Nach
+Modelländerungen eine neue Migration erzeugen mit
+`dotnet-ef migrations add <Name>` (Tool via
+`dotnet tool install --global dotnet-ef`).
+
 Die API läuft dann unter `https://localhost:5xxx`, Swagger unter `/swagger`.
-Im Development-Modus werden Migrationen automatisch angewendet und die
-aktuelle Season wird mit Beispieldaten geseedet (`Data/DbSeeder.cs`).
+Ein Development-only-Endpoint `POST /api/dev/simulate-kill` broadcastet ein
+Beispiel-`TickerEvent` über den `RaceHub` — nützlich, um die Live-Update-Kette
+(Dashboard-Ticker, Kill-Toasts, Gilden-Profil-Invalidierung) ohne echte
+Warcraft-Logs-Zugangsdaten manuell zu testen.
 
 ## Frontend starten
 
