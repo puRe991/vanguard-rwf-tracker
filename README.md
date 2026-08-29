@@ -56,6 +56,40 @@ Stufen — `npm ci`, dann `node_modules` weg + `npm ci`, dann zusaetzlich
 `package-lock.json` weg + `npm install`. Danach bricht es mit einer konkreten
 Fehlermeldung ab, statt bei jedem Start erneut alles neu zu installieren.
 
+### Architektur: 64-Bit erforderlich
+
+Die Frontend-Toolchain laeuft **nicht** auf 32-Bit (ia32). Fuer diese
+Architektur werden die noetigen nativen Binaries gar nicht veroeffentlicht:
+
+| Paket | ia32-Binding | Fallback |
+|---|---|---|
+| `rolldown` (Bundler von Vite 8) | nein | keiner |
+| `lightningcss` (via `@tailwindcss/postcss`) | nein | keiner |
+| `@tailwindcss/oxide` | nein | nur WASM (langsam) |
+| `rollup`, `esbuild`, `oxlint` | ja | — |
+
+`npm run setup` erkennt das und meldet es explizit, statt eine Reparatur zu
+versuchen — die Pakete existieren fuer ia32 schlicht nicht, das Symptom ist
+aber dieselbe Meldung `Cannot find native binding` wie beim npm-Bug oben.
+
+Haeufigster Fall: 64-Bit-Windows, auf dem versehentlich das **32-Bit**-Node
+installiert wurde (`C:\Program Files (x86)\nodejs`). Pruefen mit:
+
+```powershell
+node -p process.arch     # erwartet: x64
+```
+
+Liefert das `ia32`, hilft die 64-Bit-`.msi` von <https://nodejs.org/>.
+
+Auf einem tatsaechlich 32-Bit-Betriebssystem bleiben nur zwei Wege: die
+Toolchain zurueckstufen (Vite 7 statt 8 — nutzt Rollup + esbuild, beide mit
+ia32-Binding — und Tailwind CSS 3 statt 4, reines JavaScript), oder das
+Frontend auf einem 64-Bit-Rechner bauen und nur `dist/` ausliefern. Das
+Backend (.NET 8) laeuft auch unter 32-Bit-Windows.
+
+Hinweis: Node.js bietet 32-Bit-Windows-Builds nur bis einschliesslich Node 22
+an; ab Node 23 gibt es keine `win-x86`-Builds mehr.
+
 Wichtig: `package-lock.json` ist eingecheckt und enthaelt die nativen Binaries
 **aller** Plattformen. Deshalb ist `npm ci` die richtige Reparatur —
 `package-lock.json` zu loeschen ist die *letzte*, nicht die erste Massnahme.

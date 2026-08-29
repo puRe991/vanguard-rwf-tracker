@@ -49,6 +49,61 @@ const REQUIRED_MODULES = [
 
 const isWindows = process.platform === 'win32'
 
+// Pakete der Toolchain, die fuer 32-Bit (ia32) ueberhaupt kein natives Binding
+// veroeffentlichen. Auf so einem System ist die Installation nicht "kaputt" --
+// es gibt schlicht nichts zu installieren, und jede Reparatur waere sinnlos.
+// Stand geprueft gegen die in package-lock.json gepinnten Versionen.
+const NO_IA32_BUILD = [
+  ['rolldown (Bundler von Vite 8)', 'kein ia32-Binding, kein WASM-Fallback'],
+  ['lightningcss (via @tailwindcss/postcss)', 'kein ia32-Binding, kein WASM-Fallback'],
+  ['@tailwindcss/oxide', 'kein ia32-Binding (nur ein langsamer WASM-Fallback)'],
+]
+
+/**
+ * Prueft, ob die Toolchain auf dieser Architektur ueberhaupt laufen kann.
+ * Ohne diesen Check meldet der Import-Test "Cannot find native binding" -- also
+ * exakt dieselbe Meldung wie beim npm-Bug -- und die Reparaturleiter wuerde
+ * dreimal vergeblich neu installieren.
+ */
+function checkArchitecture() {
+  if (process.arch !== 'ia32') return true
+
+  // Unter Windows setzt WOW64 diese Variable nur, wenn ein 32-Bit-Prozess auf
+  // einem 64-Bit-Betriebssystem laeuft.
+  const osIs64Bit = Boolean(process.env.PROCESSOR_ARCHITEW6432)
+
+  log('')
+  log('FEHLER: Node.js laeuft hier als 32-Bit-Prozess (process.arch = ia32).')
+  log('')
+  log('Fuer diese Architektur gibt es die noetigen nativen Binaries nicht:')
+  for (const [name, detail] of NO_IA32_BUILD) log(`  - ${name}: ${detail}`)
+  log('')
+  log('Das laesst sich nicht durch Neuinstallieren beheben - die Pakete')
+  log('existieren fuer ia32 schlicht nicht.')
+  log('')
+
+  if (osIs64Bit) {
+    log(`Das Betriebssystem ist aber 64-Bit (${process.env.PROCESSOR_ARCHITEW6432}).`)
+    log('Es ist nur ein 32-Bit-Node installiert. Loesung:')
+    log('  1. Node.js 32-Bit deinstallieren (liegt meist unter')
+    log('     C:\\Program Files (x86)\\nodejs).')
+    log('  2. Node.js 20 LTS oder neuer als x64-Installer von https://nodejs.org/')
+    log('     installieren ("Windows Installer (.msi) 64-bit").')
+    log('  3. Neue Konsole oeffnen, mit "node -p process.arch" pruefen (erwartet: x64).')
+    log('  4. Danach erneut: npm run setup')
+  } else {
+    log('Das Betriebssystem selbst ist offenbar 32-Bit. Dann hilft nur eines von:')
+    log('  - Die Toolchain auf 32-Bit-faehige Versionen zurueckstufen:')
+    log('    Vite 7 (nutzt Rollup + esbuild, beide mit ia32-Binding) statt Vite 8,')
+    log('    und Tailwind CSS 3 (reines JavaScript) statt Tailwind 4.')
+    log('  - Oder das Frontend auf einem 64-Bit-Rechner bauen (npm run build) und')
+    log('    nur den fertigen dist/-Ordner ausliefern; das Backend (.NET 8) laeuft')
+    log('    auch unter 32-Bit-Windows.')
+  }
+  log('')
+  return false
+}
+
 function log(message) {
   process.stdout.write(`${message}\n`)
 }
@@ -163,6 +218,8 @@ function reportFailure(output) {
   log('  3. Projekt in einen kurzen Pfad legen (z. B. C:\\dev\\vanguard); Pfade > 260 Zeichen')
   log('     lassen das Entpacken der nativen Binaries fehlschlagen.')
   log('  4. Danach erneut: cd frontend && npm ci')
+  log('')
+  log(`Plattform: ${process.platform}/${process.arch}, Node ${process.version}`)
 }
 
 async function main() {
@@ -175,6 +232,10 @@ async function main() {
   }
 
   const checkOnly = args.includes('--check')
+
+  // Zuerst die Architektur, sonst diagnostiziert die Reparaturleiter einen
+  // npm-Bug, wo in Wahrheit gar kein passendes Paket existiert.
+  if (!checkArchitecture()) process.exit(1)
 
   if (!fs.existsSync(nodeModules)) {
     if (checkOnly) {
