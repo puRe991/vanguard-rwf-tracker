@@ -30,8 +30,11 @@ public class RacesController(VanguardDbContext db) : ControllerBase
 
         var bossIds = raid.Bosses.Select(b => b.Id).ToList();
 
+        // Nur moderierte Kills zählen in die Live-Wertung — Community-Einreichungen
+        // (KillsController.Submit) liegen als Unconfirmed vor, bis ein Moderator sie
+        // freigibt, und dürfen die Rangliste bis dahin nicht verschieben.
         var killsByBoss = await db.Kills
-            .Where(k => bossIds.Contains(k.BossId))
+            .Where(k => bossIds.Contains(k.BossId) && k.Status == KillStatus.Confirmed)
             .Include(k => k.Guild)
             .ToListAsync(ct);
 
@@ -97,7 +100,7 @@ public class RacesController(VanguardDbContext db) : ControllerBase
         var bossIds = raid.Bosses.Select(b => b.Id).ToList();
 
         var events = await db.Kills
-            .Where(k => bossIds.Contains(k.BossId))
+            .Where(k => bossIds.Contains(k.BossId) && k.Status == KillStatus.Confirmed)
             .Include(k => k.Guild)
             .Include(k => k.Boss)
             .OrderByDescending(k => k.Timestamp)

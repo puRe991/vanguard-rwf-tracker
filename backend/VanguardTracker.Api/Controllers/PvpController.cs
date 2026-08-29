@@ -16,8 +16,6 @@ namespace VanguardTracker.Api.Controllers;
 [Route("api/pvp")]
 public class PvpController(VanguardDbContext db) : ControllerBase
 {
-    private static readonly string[] BracketSlugs = ["2v2", "3v3", "rbg", "solo-shuffle"];
-
     [HttpGet("ladder")]
     public async Task<ActionResult<List<PvpLadderEntryDto>>> GetLadder(
         [FromQuery] string bracket = "3v3",

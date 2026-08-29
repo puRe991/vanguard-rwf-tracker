@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VanguardTracker.Api.Data;
 using VanguardTracker.Api.DTOs;
+using VanguardTracker.Api.Models;
 
 namespace VanguardTracker.Api.Controllers;
 
@@ -17,7 +18,7 @@ public class BossesController(VanguardDbContext db) : ControllerBase
     public async Task<ActionResult<List<BossPullSeriesDto>>> GetPulls(Guid id, CancellationToken ct)
     {
         var kills = await db.Kills
-            .Where(k => k.BossId == id)
+            .Where(k => k.BossId == id && k.Status == KillStatus.Confirmed)
             .Include(k => k.Guild)
             .ToListAsync(ct);
 
