@@ -131,6 +131,43 @@ if not exist "%FRONTEND_DIR%\node_modules" (
     echo [OK]     Frontend-Pakete bereits installiert ^(node_modules vorhanden^).
 )
 
+REM --- Frontend-Installation auf Funktionsfaehigkeit pruefen --------------
+REM Bekannter npm-Bug bei optionalen Abhaengigkeiten (npm/cli#4828) installiert
+REM manchmal die falsche native Rolldown/Vite-Bindung fuer die Plattform.
+REM Symptom: "vite" bzw. "npm run dev" bricht sofort mit
+REM "Cannot find native binding" ab. Wird hier automatisch erkannt und
+REM durch eine saubere Neuinstallation repariert.
+echo Pruefe Frontend-Installation...
+pushd "%FRONTEND_DIR%"
+call npx --no-install vite --version >"%TEMP%\vanguard_vite_check.txt" 2>&1
+if errorlevel 1 (
+    echo [WARNUNG] Frontend-Installation ist fehlerhaft ^(vermutlich npm-Bug mit optionalen Abhaengigkeiten^).
+    echo           Entferne node_modules und package-lock.json und installiere neu...
+    popd
+    if exist "%FRONTEND_DIR%\node_modules" rmdir /s /q "%FRONTEND_DIR%\node_modules"
+    if exist "%FRONTEND_DIR%\package-lock.json" del /f /q "%FRONTEND_DIR%\package-lock.json"
+    pushd "%FRONTEND_DIR%"
+    call npm install
+    if errorlevel 1 (
+        echo [FEHLER] Neuinstallation der Frontend-Pakete ist fehlgeschlagen.
+        popd
+        pause
+        exit /b 1
+    )
+    call npx --no-install vite --version >"%TEMP%\vanguard_vite_check.txt" 2>&1
+    if errorlevel 1 (
+        echo [FEHLER] Frontend-Installation weiterhin fehlerhaft. Ausgabe:
+        type "%TEMP%\vanguard_vite_check.txt"
+        popd
+        pause
+        exit /b 1
+    )
+    echo [OK]     Neuinstallation erfolgreich.
+) else (
+    echo [OK]     Frontend-Installation funktionsfaehig.
+)
+popd
+
 REM --- Frontend-.env anlegen, falls nicht vorhanden ----------------------
 if not exist "%FRONTEND_DIR%\.env" (
     echo Lege frontend\.env an ^(zeigt auf lokales Backend, keine Mock-Daten^)...
