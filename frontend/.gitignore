@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Reste fehlgeschlagener node_modules-Reparaturen (siehe scripts/setup.mjs)
+.trash-node_modules-*

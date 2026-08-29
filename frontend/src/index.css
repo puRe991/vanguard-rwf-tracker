@@ -1,8 +1,18 @@
-@import 'tailwindcss';
-
+/* Schriften zuerst: CSS verlangt, dass @import vor allen anderen Regeln steht. */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-@theme {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Dieselben Werte wie in tailwind.config.js. Tailwind 4 hat diese Variablen aus
+ * dem @theme-Block selbst erzeugt; unter v3 muessen sie hier stehen, weil die
+ * Regeln weiter unten direkt per var(--color-...) darauf zugreifen.
+ */
+:root {
+  color-scheme: dark;
+
   --color-obsidian: #0a0c10;
   --color-card: #12161c;
   --color-border: #232a34;
@@ -21,9 +31,6 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
-:root {
-  color-scheme: dark;
-}
 
 body {
   margin: 0;
@@ -88,3 +95,4 @@ body {
     background-color: var(--color-gold);
   }
 }
+

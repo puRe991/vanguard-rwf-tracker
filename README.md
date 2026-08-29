@@ -9,6 +9,85 @@ Zeiträume ohne verlässliche API-Abdeckung.
 - `backend/` — ASP.NET Core 8 Web-API (C#, EF Core, PostgreSQL, SignalR)
 - `frontend/` — React (Vite + TypeScript), TanStack Query, Tailwind CSS
 
+## Schnellstart
+
+```powershell
+# Windows (PowerShell oder Doppelklick auf start.cmd)
+.\start.ps1
+```
+
+```bash
+# Linux / macOS
+./start.sh
+```
+
+Das Startskript prueft die Werkzeuge (.NET 8 SDK, Node 20+, npm), stellt die
+Backend-Pakete wieder her, installiert und **verifiziert** die
+Frontend-Abhaengigkeiten, legt bei Bedarf `frontend/.env` aus `.env.example` an
+und startet Backend (`http://localhost:5000`) und Frontend
+(`http://localhost:5173`).
+
+Nuetzliche Schalter: `-SkipBackend` / `--skip-backend`, `-SkipFrontend` /
+`--skip-frontend`, `-InstallOnly` / `--install-only`.
+
+### Frontend-Installation reparieren
+
+Die Frontend-Toolchain (vite/rolldown, Tailwind Oxide, lightningcss) laedt
+native Binaries, die als plattformspezifische `optionalDependencies`
+ausgeliefert werden. npm ueberspringt diese Pakete unter bestimmten Umstaenden
+([npm/cli#4828](https://github.com/npm/cli/issues/4828)) — vor allem, wenn ueber
+einen bereits vorhandenen `node_modules`-Baum installiert wird oder
+`package-lock.json` auf einer anderen Plattform erzeugt wurde. Symptom:
+
+```
+Cannot find native binding. npm has a bug related to optional dependencies ...
+```
+
+`frontend/scripts/setup.mjs` behandelt genau das:
+
+```bash
+cd frontend
+npm run setup
+```
+
+Das Skript importiert die tatsaechlich benoetigten Pakete (statt nur zu pruefen,
+ob `node_modules` existiert) und repariert bei Bedarf in **hoechstens drei**
+Stufen — `npm ci`, dann `node_modules` weg + `npm ci`, dann zusaetzlich
+`package-lock.json` weg + `npm install`. Danach bricht es mit einer konkreten
+Fehlermeldung ab, statt bei jedem Start erneut alles neu zu installieren.
+
+### Architektur: 32-Bit (ia32) wird unterstuetzt
+
+Die Toolchain ist bewusst so gewaehlt, dass sie auch auf 32-Bit-Windows laeuft.
+Das schraenkt die moeglichen Versionen ein:
+
+| Paket | ia32-Binding | Konsequenz |
+|---|---|---|
+| `rollup`, `esbuild` (Vite 7) | ja | verwendet |
+| `oxlint` | ja | verwendet |
+| `tailwindcss` 3 | rein JavaScript | verwendet |
+| `rolldown` (Vite **8**) | nein, kein WASM-Fallback | **nicht nutzbar** |
+| `@tailwindcss/oxide`, `lightningcss` (Tailwind **4**) | nein bzw. nur WASM | **nicht nutzbar** |
+
+Deshalb sind Vite auf `^7` und Tailwind CSS auf `^3` gepinnt. Ein Upgrade auf
+Vite 8 oder Tailwind 4 setzt eine x64-Umgebung voraus — auf ia32 scheitert es
+mit `Cannot find native binding`, und zwar unbehebbar, weil es die Pakete fuer
+diese Architektur schlicht nicht gibt.
+
+Architektur pruefen:
+
+```powershell
+node -p process.arch     # ia32 = 32-Bit, x64 = 64-Bit
+```
+
+Hinweis: Node.js bietet 32-Bit-Windows-Builds nur bis einschliesslich Node 22
+an; ab Node 23 gibt es keine `win-x86`-Builds mehr. Auf ia32 ist Node 22 also
+die letzte nutzbare Version.
+
+Wichtig: `package-lock.json` ist eingecheckt und enthaelt die nativen Binaries
+**aller** Plattformen. Deshalb ist `npm ci` die richtige Reparatur —
+`package-lock.json` zu loeschen ist die *letzte*, nicht die erste Massnahme.
+
 ## Backend starten
 
 Voraussetzung: .NET 8 SDK, PostgreSQL.
