@@ -9,6 +9,57 @@ Zeiträume ohne verlässliche API-Abdeckung.
 - `backend/` — ASP.NET Core 8 Web-API (C#, EF Core, PostgreSQL, SignalR)
 - `frontend/` — React (Vite + TypeScript), TanStack Query, Tailwind CSS
 
+## Schnellstart
+
+```powershell
+# Windows (PowerShell oder Doppelklick auf start.cmd)
+.\start.ps1
+```
+
+```bash
+# Linux / macOS
+./start.sh
+```
+
+Das Startskript prueft die Werkzeuge (.NET 8 SDK, Node 20+, npm), stellt die
+Backend-Pakete wieder her, installiert und **verifiziert** die
+Frontend-Abhaengigkeiten, legt bei Bedarf `frontend/.env` aus `.env.example` an
+und startet Backend (`http://localhost:5000`) und Frontend
+(`http://localhost:5173`).
+
+Nuetzliche Schalter: `-SkipBackend` / `--skip-backend`, `-SkipFrontend` /
+`--skip-frontend`, `-InstallOnly` / `--install-only`.
+
+### Frontend-Installation reparieren
+
+Die Frontend-Toolchain (vite/rolldown, Tailwind Oxide, lightningcss) laedt
+native Binaries, die als plattformspezifische `optionalDependencies`
+ausgeliefert werden. npm ueberspringt diese Pakete unter bestimmten Umstaenden
+([npm/cli#4828](https://github.com/npm/cli/issues/4828)) — vor allem, wenn ueber
+einen bereits vorhandenen `node_modules`-Baum installiert wird oder
+`package-lock.json` auf einer anderen Plattform erzeugt wurde. Symptom:
+
+```
+Cannot find native binding. npm has a bug related to optional dependencies ...
+```
+
+`frontend/scripts/setup.mjs` behandelt genau das:
+
+```bash
+cd frontend
+npm run setup
+```
+
+Das Skript importiert die tatsaechlich benoetigten Pakete (statt nur zu pruefen,
+ob `node_modules` existiert) und repariert bei Bedarf in **hoechstens drei**
+Stufen — `npm ci`, dann `node_modules` weg + `npm ci`, dann zusaetzlich
+`package-lock.json` weg + `npm install`. Danach bricht es mit einer konkreten
+Fehlermeldung ab, statt bei jedem Start erneut alles neu zu installieren.
+
+Wichtig: `package-lock.json` ist eingecheckt und enthaelt die nativen Binaries
+**aller** Plattformen. Deshalb ist `npm ci` die richtige Reparatur —
+`package-lock.json` zu loeschen ist die *letzte*, nicht die erste Massnahme.
+
 ## Backend starten
 
 Voraussetzung: .NET 8 SDK, PostgreSQL.
