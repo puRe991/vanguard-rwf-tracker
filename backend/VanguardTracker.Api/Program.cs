@@ -12,6 +12,14 @@ using VanguardTracker.Api.WarcraftLogs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Lokale, nicht eingecheckte Overrides (Connection-String, JWT-Key, WCL-Credentials).
+// Bewusst nach den appsettings.*.json geladen, damit sie gewinnen; per .gitignore
+// ausgeschlossen. Siehe README, Abschnitt "Backend starten".
+builder.Configuration.AddJsonFile(
+    $"appsettings.{builder.Environment.EnvironmentName}.local.json",
+    optional: true,
+    reloadOnChange: true);
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -100,7 +108,15 @@ if (app.Environment.IsDevelopment())
     await PvpDemoSeeder.SeedAsync(db);
 }
 
-app.UseHttpsRedirection();
+// In Development läuft die API bewusst nur über http://localhost:5000 (siehe
+// Properties/launchSettings.json und frontend/.env.example). Ein HTTPS-Redirect
+// würde dort den CORS-Preflight und das SignalR-Negotiate des Frontends brechen,
+// weil der 307 vor UseCors greift.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseCors(CorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();

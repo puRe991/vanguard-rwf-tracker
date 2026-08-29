@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VanguardTracker.Api.Data;
 using VanguardTracker.Api.DTOs;
+using VanguardTracker.Api.Models;
 
 namespace VanguardTracker.Api.Controllers;
 
@@ -32,7 +33,8 @@ public class GuildsController(VanguardDbContext db) : ControllerBase
 
         var bossIds = raid.Bosses.Select(b => b.Id).ToHashSet();
         var kills = await db.Kills
-            .Where(k => k.GuildId == id && bossIds.Contains(k.BossId))
+            .Where(k => k.GuildId == id && bossIds.Contains(k.BossId)
+                        && k.Status == KillStatus.Confirmed)
             .ToListAsync(ct);
 
         if (kills.Count == 0) return NotFound();

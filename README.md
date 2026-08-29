@@ -20,6 +20,15 @@ dotnet restore
 dotnet run
 ```
 
+`appsettings.Development.local.json` wird von `Program.cs` als zusätzliche
+Konfigurationsquelle nach den eingecheckten `appsettings.*.json` geladen und
+gewinnt damit gegen deren Platzhalter (`Password=changeme`,
+`CHANGE_ME_TO_A_LONG_RANDOM_SECRET…`). Die Datei ist per `.gitignore`
+ausgeschlossen. `dotnet run` nimmt das Profil `http` aus
+`Properties/launchSettings.json` und setzt darüber
+`ASPNETCORE_ENVIRONMENT=Development` — ohne das liefe die App in `Production`,
+also ohne Migration, Seeder und Swagger.
+
 Die `InitialCreate`-Migration liegt bereits unter `Migrations/` im Repo — im
 Development-Modus wendet `Program.cs` sie beim Start automatisch an
 (`db.Database.MigrateAsync()`) und lässt danach alle Seeder durchlaufen
@@ -28,7 +37,14 @@ Modelländerungen eine neue Migration erzeugen mit
 `dotnet-ef migrations add <Name>` (Tool via
 `dotnet tool install --global dotnet-ef`).
 
-Die API läuft dann unter `https://localhost:5xxx`, Swagger unter `/swagger`.
+Die API läuft dann unter `http://localhost:5000` — dieselbe Adresse, auf die
+`frontend/.env.example` zeigt. Swagger liegt unter `/swagger`. In Development
+ist der HTTPS-Redirect bewusst deaktiviert, weil er vor `UseCors` greift und
+damit CORS-Preflight und SignalR-Negotiate des Frontends brechen würde; wer
+TLS lokal testen will, nimmt `dotnet run --launch-profile https`
+(`https://localhost:5001`) und setzt `VITE_API_BASE_URL`/`VITE_RACE_HUB_URL`
+entsprechend um.
+
 Ein Development-only-Endpoint `POST /api/dev/simulate-kill` broadcastet ein
 Beispiel-`TickerEvent` über den `RaceHub` — nützlich, um die Live-Update-Kette
 (Dashboard-Ticker, Kill-Toasts, Gilden-Profil-Invalidierung) ohne echte

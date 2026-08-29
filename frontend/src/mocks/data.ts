@@ -5,6 +5,7 @@ import type {
   HistoryBoss,
   HistoryTier,
   LiveTickerEvent,
+  PullSeriesPoint,
   PvpBracket,
   PvpLadderEntry,
   PvpTier,
@@ -959,22 +960,45 @@ export const mockHistory: HistoryTier[] = [
   },
 ];
 
+/**
+ * Pull-Verlauf mit realistischem Takt: konstante Pull-Dauer plus eine lange Pause
+ * nach jeder Raid-Nacht. Die beiden Gilden bekommen bewusst unterschiedliche Takte —
+ * genau der Vergleich ist der Zweck der Boss-Detailseite, bei identischem Rhythmus
+ * lägen die Linien exakt aufeinander.
+ */
+function mockPullTimeline(
+  count: number,
+  { minutesPerPull, pullsPerNight, breakHours }:
+    { minutesPerPull: number; pullsPerNight: number; breakHours: number },
+): PullSeriesPoint[] {
+  const offsetsMin: number[] = [];
+  let offset = 0;
+  for (let i = 0; i < count; i++) {
+    if (i > 0) {
+      offset += minutesPerPull;
+      if (i % pullsPerNight === 0) offset += breakHours * 60;
+    }
+    offsetsMin.push(offset);
+  }
+
+  // Letzter Pull liegt "jetzt", der Verlauf reicht entsprechend weit zurück.
+  const startMs = Date.now() - offset * 60_000;
+  return offsetsMin.map((min, i) => ({
+    pullNumber: i + 1,
+    timestamp: new Date(startMs + min * 60_000).toISOString(),
+  }));
+}
+
 export const mockPullSeries: BossPullSeries[] = [
   {
     guild: { id: 'g1', name: 'Liquid', region: 'EU' },
     killed: true,
-    points: Array.from({ length: 214 }, (_, i) => ({
-      pullNumber: i + 1,
-      timestamp: new Date(Date.now() - (214 - i) * 900_000).toISOString(),
-    })),
+    points: mockPullTimeline(214, { minutesPerPull: 6, pullsPerNight: 55, breakHours: 9 }),
   },
   {
     guild: { id: 'g2', name: 'Echo', region: 'EU' },
     killed: false,
-    points: Array.from({ length: 341 }, (_, i) => ({
-      pullNumber: i + 1,
-      timestamp: new Date(Date.now() - (341 - i) * 900_000).toISOString(),
-    })),
+    points: mockPullTimeline(341, { minutesPerPull: 4.5, pullsPerNight: 70, breakHours: 10 }),
   },
 ];
 
